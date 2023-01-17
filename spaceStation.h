@@ -7,6 +7,7 @@
 #include "miscellaneous.cpp"
 #include "ship.h"
 #include "goods.h"
+#include "dialog.h"
 using namespace std;
 using namespace Jon;
 
@@ -15,11 +16,11 @@ public:
 
     SpaceStation() {}
 
-    string stationName = "";
+    string stationName = "Jupiter Station";
 
     // ---------------------------------------------------------------------------------------------
 
-    void printWares(vector<Goods*> wares) {
+    void printWares() {
         
         cout << setw(17) << "Name" << setw(7) << "Price" 
             << setw(10) << "Quantity" << "\n----------------------------------\n";
@@ -29,6 +30,22 @@ public:
             wares[i]->printGoodsData();
         }
     }    
+
+    // ---------------------------------------------------------------------------------------------
+
+    void interactWithStation() {
+        Dialog::displayJupiter();
+        int width = 22;
+        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
+        cout << setw((width / 2) + (stationName.length() / 2)) << this->stationName << endl;
+        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
+        cout << "1.) Buy trade cargo" << endl;
+        cout << "2.) Sell trade cargo" << endl;
+        cout << "3.) Hire crew" << endl;
+        cout << "4.) Upgrade ship" << endl;
+        cout << "5.) Depart for next station" << endl;
+        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
+    }
 
 // =================================================================================================
 

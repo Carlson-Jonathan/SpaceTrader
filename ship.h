@@ -18,6 +18,8 @@ public:
     int crewSize = 0;
     int money = 1000;
 
+    // ---------------------------------------------------------------------------------------------
+
     void displayShipStatus() {
         int width = 22;
         cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
@@ -48,6 +50,8 @@ public:
 
 private:
 
+    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier"};
+
     vector<vector<int>> ships = {
     //   Hull, cargo, crew, price
         { 100,    85,   10,   800},
@@ -57,7 +61,8 @@ private:
         { 250,     0,   20,   600}
     };
 
-    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier"};
+
+    // ---------------------------------------------------------------------------------------------
 
     int shipSelector() {
         cout << "\nCredits: $" << money << endl;
@@ -71,6 +76,7 @@ private:
         }
         return getInt(ships.size());
     }
+
 };
 
 #endif // SHIP_H

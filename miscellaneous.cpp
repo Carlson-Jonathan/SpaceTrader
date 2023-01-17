@@ -29,7 +29,37 @@ namespace Jon {
 
         } while(invalid);
 
+        cin.clear();
+        cin.ignore(10000,'\n');
+
         return number;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    char getChar(string validChars) {
+        char letter = ' ';
+        bool invalid = false;
+
+        do {
+            cout << "\n>> ";
+            cin >> letter;
+
+            size_t found = validChars.find(toupper(letter));
+            invalid = (found==std::string::npos) || cin.fail();            
+
+            if(invalid) {
+                cout << "Invalid input. Try again.\n";
+                cin.clear();
+                cin.ignore(10000,'\n');
+            }
+
+        } while(invalid);
+        
+        cin.clear();
+        cin.ignore(10000,'\n');
+        
+        return toupper(letter);
     }
 
     // ---------------------------------------------------------------------------------------------

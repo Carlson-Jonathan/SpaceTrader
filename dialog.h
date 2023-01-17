@@ -2,6 +2,7 @@
 #define EVENTS_H
 
 #include <iostream>
+#include <iomanip>
 #include "miscellaneous.cpp"
 using namespace std;
 using namespace Jon;
@@ -38,6 +39,7 @@ namespace Dialog {
 
         return number;
     }
+    // ---------------------------------------------------------------------------------------------
 
     // ---------------------------------------------------------------------------------------------
 
@@ -53,6 +55,22 @@ namespace Dialog {
         string nothing = "";
         cout << "\nPress [Enter] to continue...";
         getline(cin, nothing);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void displayJupiter() {
+        string jupiter = "                 *       +\n"
+       "\t    '                  |\n"
+       "\t()    .-.,='``'=.    - o -\n"
+       "\t      '=/_       \\     |\n"
+       "\t   *   |  '=._    |\n"
+       "\t        \\     `=./`,        '\n"
+       "\t     .   '=.__.=' `='   *\n"
+   "\t+                       +\n"
+        "\t   O      *      '     .\n";
+
+        cout << jupiter << endl;
     }
 
 };
