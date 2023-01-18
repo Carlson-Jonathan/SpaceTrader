@@ -8,6 +8,7 @@
 #include "ship.h"
 #include "goods.h"
 #include "dialog.h"
+#include "asciiArt.cpp"
 using namespace std;
 using namespace Jon;
 
@@ -15,8 +16,14 @@ class SpaceStation {
 public:
 
     SpaceStation() {}
+    SpaceStation(string stationName) {
+        this->stationName = stationName;
+        this->stationSymbol = charToString(stationName[0]);
+    }
 
-    string stationName = "Jupiter Station";
+    string stationName = "";
+    string stationSymbol = "";
+    Ship ship;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -34,7 +41,8 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void interactWithStation() {
-        Dialog::displayJupiter();
+        Dialog::screenBorder();
+        AsciiArt::saturn2();
         int width = 22;
         cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
         cout << setw((width / 2) + (stationName.length() / 2)) << this->stationName << endl;
@@ -44,7 +52,8 @@ public:
         cout << "3.) Hire crew" << endl;
         cout << "4.) Upgrade ship" << endl;
         cout << "5.) Depart for next station" << endl;
-        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
+        cout << setfill('=') << setw(width) << "\n\n" << setfill(' ');
+        Dialog::screenBorder();
     }
 
 // =================================================================================================

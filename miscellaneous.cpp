@@ -64,21 +64,13 @@ namespace Jon {
 
     // ---------------------------------------------------------------------------------------------
 
-    void clear() {
-        for(int i = 0; i < 100; i++) {
-            cout << "\n";
-        }
+    string charToString(char letter) {
+        string str = " ";
+        str[0] = letter;
+        return str;
     }
 
     // ---------------------------------------------------------------------------------------------
-
-    void pause() {
-        cin.clear();
-        cin.ignore(10000,'\n');        
-        cout << "\nPress [Enter] to continue...";
-        string nothing = "";
-        getline(cin, nothing);
-    }
 
 }
 
