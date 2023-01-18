@@ -49,7 +49,7 @@ public:
 
         Dialog::clear();
         Dialog::screenBorder();
-        AsciiArt::spaceShip1();
+        AsciiArt::spaceShip3();
         cout << "\nShip purchased!\n" << endl;
         displayShipStatus();
         Dialog::screenBorder();

@@ -77,7 +77,7 @@ namespace Dialog {
 
         clear();
         screenBorder();
-        centerText("Welcome to Enceladus Station!", 54);
+        centerText("Welcome to Enceladus Station!", 60);
         AsciiArt::saturn2();
         cout << introText << endl;
         cout << "Before we can proceed, you must purchase a ship.\n\n";

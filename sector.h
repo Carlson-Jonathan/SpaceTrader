@@ -24,12 +24,11 @@ private:
     SpaceStation* station;
     string allStationSymbols = "";
 
-    vector<string> sectorMap = {
-        "",
-        "O----------------------------------O",
-        "|          *       .               |",
-        "| .   (E)    .          .    (O)   |",
-        "|                    .             |",
+    vector<string> sectorMap = {" ",
+        "0----------------------------------0",
+        "|          *       .            .  |",
+        "| .   (E)    .          .          |",
+        "|                    .       (O)   |",
         "|  *       +    (C)           .    |",
         "|                         *        |",
         "|   (T)       .                  . |",
@@ -44,7 +43,7 @@ private:
         "|                            (V)   |",
         "|  *    (R)       *       +        |",
         "|           .         .            |",
-        "O----------------------------------O"
+        "0----------------------------------0"
     };    
 
     vector<string> stations = {
@@ -99,8 +98,8 @@ void Sector::setMarker(string station, bool erase) {
             else {
                 sectorMap[i][found - 2] = '>';
                 sectorMap[i][found + 2] = '<';
-                sectorMap[i - 1][found] = 'v';
-                sectorMap[i + 1][found] = '^';
+                sectorMap[i - 1][found] = 'V';
+                sectorMap[i + 1][found] = 'A';
             }
             break;
         }
