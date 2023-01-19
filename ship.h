@@ -7,6 +7,7 @@
 #include "miscellaneous.cpp"
 #include "dialog.h"
 #include "asciiArt.cpp"
+
 using namespace std;
 using namespace Jon;
 
@@ -23,14 +24,14 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void displayShipStatus() {
-        int width = 22;
-        cout << "\t" << setfill('=') << setw(width) << "" << endl << setfill(' ');
-        cout << "\t" << setw((width / 2) + (name.length() / 2)) << this->name << endl;
-        cout << "\t" << setfill('=') << setw(width) << "" << endl << setfill(' ');
-        cout << "\t" << setw(18) << "Hull Integrity: " << this->hull          << endl;
-        cout << "\t" << setw(18) << "Cargo Capacity: " << this->cargoCapacity << endl;
-        cout << "\t" << setw(18) << "Crew Capacity: "  << this->crewSize      << endl;
-        cout << "\t" << setfill('=') << setw(width) << "" << endl << setfill(' ');
+        vector<string> title = {this->name};
+        vector<vector<string>> content = {
+            {"Hull Integrity: " + to_string(this->hull)},
+            {"Cargo Capacity: " + to_string(this->cargoCapacity)},
+            {"Crew Capacity:  " + to_string(this->crewSize)}
+        };
+
+        Dialog::generateDialogTerminal(title, content);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -49,9 +50,11 @@ public:
 
         Dialog::clear();
         Dialog::screenBorder();
-        AsciiArt::spaceShip3();
-        cout << "\nShip purchased!\n" << endl;
+
+        cout << AsciiArt::asciiShips[selection - 1] << endl;
+        Dialog::centerText("Ship Purchased!", 60);
         displayShipStatus();
+
         Dialog::screenBorder();
         Dialog::pause();
         Dialog::clear();
@@ -61,7 +64,7 @@ public:
 
 private:
 
-    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier"};
+    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier", "Beeter"};
 
     vector<vector<int>> ships = {
     //   Hull, cargo, crew, price
@@ -69,29 +72,39 @@ private:
         { 200,    30,   15,   750},
         { 150,    55,    8,   850},
         {  75,   100,    5,   675},
-        { 250,     0,   20,   600}
+        { 250,     0,   20,   600},
+        {  15,     5,    3,   150}
     };
 
 
     // ---------------------------------------------------------------------------------------------
 
     int shipSelector() {
-        cout << "\nCredits: $" << money << endl;
-        cout << "Select your ship:\n\n";
-        cout << setw(13) << "Name" << setw(8) << "Hull" << setw(10) << "Capacity" 
-             << setw(7) << "Crew" << setw(8) << "Price" << endl;
-        cout << "     -----------------------------------------\n";
-        for(int i = 0; i < ships.size(); i++) {
-            cout << (i + 1) << ".)" << setw(10) << shipNames[i] << setw(8) << ships[i][0] << setw(10) << ships[i][1]
-                 << setw(7) << ships[i][2] << setw(5) << "$" << ships[i][3] << endl;
-        }
-        cout << endl;
 
+        vector<string> title = {"Name", "Hull", "Cargo", "Crew", "Price"};
+
+        vector<vector<string>> content;
+        for(int i = 0; i < ships.size(); i++) {
+            content.push_back({});
+        }
+
+        for(int i = 0; i < ships.size(); i++) {
+            content[i].push_back(shipNames[i]);
+            for(int j = 0; j < ships[0].size(); j++) {
+                string x = to_string(ships[i][j]);
+                if(j == 3)
+                    x.insert(0, "$");
+                content[i].push_back(x);
+            }
+        }
+
+        string finances = "Credits: $" + to_string(money);
+        Dialog::centerText(finances, 60);
+        Dialog::generateDialogTerminal(title, content, 40, true);
         Dialog::screenBorder();
         int selection = getInt(ships.size());
         return selection;
     }
-
 };
 
 #endif // SHIP_H

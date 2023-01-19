@@ -4,11 +4,12 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include "miscellaneous.cpp"
 #include "ship.h"
 #include "goods.h"
 #include "dialog.h"
 #include "asciiArt.cpp"
+#include "miscellaneous.cpp"
+
 using namespace std;
 using namespace Jon;
 
@@ -43,16 +44,17 @@ public:
     void interactWithStation() {
         Dialog::screenBorder();
         AsciiArt::saturn2();
-        int width = 22;
-        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
-        cout << setw((width / 2) + (stationName.length() / 2)) << this->stationName << endl;
-        cout << setfill('=') << setw(width) << "" << endl << setfill(' ');
-        cout << "1.) Buy trade cargo" << endl;
-        cout << "2.) Sell trade cargo" << endl;
-        cout << "3.) Hire crew" << endl;
-        cout << "4.) Upgrade ship" << endl;
-        cout << "5.) Depart for next station" << endl;
-        cout << setfill('=') << setw(width) << "\n\n" << setfill(' ');
+
+        vector<string> title = {this->stationName};
+        vector<vector<string>> content = {
+            {"Buy trade cargo"},
+            {"Sell trade cargo"},
+            {"Hire crew"},
+            {"Upgrade ship"},
+            {"Depart for next station"}
+        };
+
+        Dialog::generateDialogTerminal(title, content, 27, true);
         Dialog::screenBorder();
     }
 
