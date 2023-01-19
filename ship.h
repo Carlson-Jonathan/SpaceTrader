@@ -24,14 +24,13 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void displayShipStatus() {
-        vector<string> title = {this->name};
-        vector<vector<string>> content = {
-            {"Hull Integrity: " + to_string(this->hull)},
-            {"Cargo Capacity: " + to_string(this->cargoCapacity)},
-            {"Crew Capacity:  " + to_string(this->crewSize)}
+        vector<string> content = {
+            "Hull Integrity: " + to_string(this->hull),
+            "Cargo Capacity: " + to_string(this->cargoCapacity),
+            "Crew Capacity:  " + to_string(this->crewSize)
         };
 
-        Dialog::generateDialogTerminal(title, content);
+        Dialog::generateDialogTerminal(this->name, content, 19, false);
     }
 
     // ---------------------------------------------------------------------------------------------

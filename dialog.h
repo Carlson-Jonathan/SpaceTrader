@@ -72,12 +72,13 @@ namespace Dialog {
     // ---------------------------------------------------------------------------------------------
 
     void generateDialogTerminal(vector<string> title, vector<vector<string>> content, 
-                                int dialogWidth = 30, bool enumerate = false) {
+                                int dialogWidth = 30, bool enumerate = true) {
 
         int indention = (60 - dialogWidth) / 2;
         string horizontalLine = "";
-        
-        while(dialogWidth--)
+        int w = dialogWidth;
+
+        while(w--)
             horizontalLine += "-";
 
         centerText(horizontalLine, 60);
@@ -120,22 +121,84 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
+    void generateDialogTerminal(string title, vector<string> content, int dialogWidth = 30, 
+                                bool enumerate = true) {
 
+        int indention = (60 - dialogWidth) / 2;
+        string horizontalLine = "";
+        int w = dialogWidth;        
+
+        while(w--)
+            horizontalLine += "-";
+
+        centerText(horizontalLine, 60);
+        centerText(title, 60);
+        centerText(horizontalLine, 60);
+
+        for(int i = 0; i < content.size(); i++) {
+            if(enumerate)
+                cout << setw(indention + 1) << right << (i + 1) << ".) " << setw(12) << left;
+            else
+                cout << setw(indention) << right << "" << setw(12) << left;
+            cout << content[i] << endl;
+        }
+
+        centerText(horizontalLine, 60);
+        cout << endl;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    string centerBrokenString(string text, int indent) {
+        size_t found = 0;
+        string indention = "";
+        while(indent--)
+            indention += " ";
+
+        do {
+            found = text.find("\n", found + 1);
+            text.insert(found + 1, indention);
+        } while(found!=std::string::npos);
+
+        return text;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void generateDialogTerminal(string title, string content, int dialogWidth = 30) {
+
+        int indention = (60 - dialogWidth) / 2;
+        string horizontalLine = "";
+        int w = dialogWidth;
+
+        while(w--)
+            horizontalLine += "-";
+
+        centerText(horizontalLine, 60);
+        centerText(title, 60);
+        centerText(horizontalLine, 60);
+
+        content = formatTextWidth(content, dialogWidth);
+        content = centerBrokenString(content, indention);
+        cout << content << endl;
+        centerText(horizontalLine, 60);
+        cout << endl;
+    }    
+
+    // ---------------------------------------------------------------------------------------------
 
     void newGameIntro() {
         string introText = "Story exposition goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla eu sem viverra tincidunt. Vivamus mollis turpis a elit porttitor, nec aliquet purus porta. Nullam vestibulum elit ut mi sollicitudin scelerisque. Donec sit amet consequat magna, vitae fermentum sem. In scelerisque dolor a arcu tempus pharetra. Nam scelerisque nisl nec semper ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras ut nunc eu lacus sagittis ullamcorper non sit amet metus. Nullam interdum dui vitae tincidunt viverra. Donec pharetra feugiat congue. Maecenas lobortis lacus turpis, ac dapibus nulla feugiat vel. Nulla eu enim purus. Nulla feugiat justo vitae sagittis varius. Phasellus quis metus id lectus imperdiet convallis. End of string.";
-        introText = formatTextWidth(introText, 40);
-        vector<string> title = {"Welcome to Enceladus Station!"};
-        vector<vector<string>> content = {{introText}};
+        string title = "Welcome to Enceladus Station!";
+        string content = introText;
         clear();
         screenBorder();
 
         AsciiArt::saturn2();
 
-        Dialog::generateDialogTerminal(title, content, 40, false);
+        generateDialogTerminal(title, content, 50);
 
-        // cout << introText << endl;
-        Dialog::centerText("Before we can proceed, you must purchase a ship.", 60);
+        centerText("Before we can proceed, you must purchase a ship...\n", 60);
         screenBorder();
         pause();
         clear();
