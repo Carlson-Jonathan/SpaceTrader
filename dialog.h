@@ -34,8 +34,12 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
-    void screenBorder() {
-        cout << "============================================================" << endl;
+    string drawLine(char style, int width) {
+        string line = "";
+        while(width--) {
+            line += style;
+        }
+        return line;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -167,21 +171,14 @@ namespace Dialog {
 
     void generateDialogTerminal(string title, string content, int dialogWidth = 30) {
 
-        int indention = (60 - dialogWidth) / 2;
-        string horizontalLine = "";
-        int w = dialogWidth;
-
-        while(w--)
-            horizontalLine += "-";
-
-        centerText(horizontalLine, 60);
+        centerText(drawLine('-', dialogWidth), 60);
         centerText(title, 60);
-        centerText(horizontalLine, 60);
+        centerText(drawLine('-', dialogWidth), 60);
 
         content = formatTextWidth(content, dialogWidth);
-        content = centerBrokenString(content, indention);
+        content = centerBrokenString(content, ((60 - dialogWidth) / 2));
         cout << content << endl;
-        centerText(horizontalLine, 60);
+        centerText(drawLine('-', dialogWidth), 60);
         cout << endl;
     }    
 
@@ -192,14 +189,15 @@ namespace Dialog {
         string title = "Welcome to Enceladus Station!";
         string content = introText;
         clear();
-        screenBorder();
 
+        cout << drawLine('=', 60) << endl;
         AsciiArt::saturn2();
+        cout << drawLine('=', 60) << endl;
 
         generateDialogTerminal(title, content, 50);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);
-        screenBorder();
+        cout << drawLine('=', 60) << endl;
         pause();
         clear();
     }

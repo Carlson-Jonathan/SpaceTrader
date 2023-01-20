@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <map>
+#include "miscellaneous.cpp"
 using namespace std;
 
 class Sector {
@@ -40,9 +41,9 @@ private:
         "|  .           (B)          .      |",
         "|    (G)              +         .  |",
         "|             .                    |",
-        "|                            (V)   |",
-        "|  *    (R)       *       +        |",
-        "|           .         .            |",
+        "|                            (H)   |",
+        "|  *    (R)       *   (U)  +       |",
+        "|           .       .              |",
         "0----------------------------------0"
     };    
 
@@ -54,10 +55,11 @@ private:
         "Sagetarius IV",
         "Polaris Nebula",
         "Lightyear Gangway",
-        "Betelgeuse Trading Post",
+        "Betelgeuse Post",
         "Gravity Hub",
-        "Vega Market",
-        "Rigel Exchange"
+        "Hyperion Market",
+        "Rigel Exchange",
+        "Ursa Ultra"
     };
 
     void           displayMap           ();
@@ -73,9 +75,9 @@ private:
 
 void Sector::displayMap() {
     string mapTitle = "Current Location: " + station->stationName;
-    Dialog::screenBorder();
+    cout << Dialog::drawLine('=', 60) << endl;
     Dialog::centerText(mapTitle, 60);
-    Dialog::screenBorder();
+    cout << Dialog::drawLine('=', 60) << endl;
 
     for(auto i : sectorMap) {
         Dialog::centerText(i, 60);
@@ -148,14 +150,24 @@ void Sector::gameLoop() {
     switch (selection) {
         case 1: 
             Dialog::clear();
-            station->printWares();
+            station->purchaseGoods();
             break;
+        case 2:
+            Dialog::clear();
+            station->printWares(station->ship.cargo);
+            break;
+        case 4:
+            Dialog::clear();
+            station->ship.displayShipStatus();
+            break;            
         case 5: 
             Dialog::clear();
-            displayMap();
-            stationSelector();
-            Dialog::pause();
-            Dialog::clear();
+            while(true) {
+                displayMap();
+                stationSelector();
+                // Dialog::pause();
+                Dialog::clear();
+            }
             displayMap();
             break;
         default:
@@ -167,29 +179,30 @@ void Sector::gameLoop() {
 
 void Sector::stationSelector() {
 
-    cout << "\nSelect your next destination:\n\n";
+    vector<string> line = stations;
     for(int i = 0; i < stations.size(); i++) {
-        string nextSymbol = charToString(stations[i][0]);
-        cout << nextSymbol << ".) " << setw(25) << stations[i] << "  (" 
-             << setw(3) << getDistance(station->stationSymbol, nextSymbol) << " light years)" 
-             << endl;
+        line[i] += (" (" + to_string(getDistance(this->station->stationSymbol, charToString(this->allStationSymbols[i]))) + " LYs)");
     }
-    cout << endl;
 
+    string title = "Select Your Next Destination";
+    Dialog::generateDialogTerminal(title, line, 36, false);
+
+    // Create options and remove symbol for current station
     string availableSymbols = allStationSymbols;
     size_t found = allStationSymbols.find(station->stationSymbol);
     if(found!=std::string::npos) 
         availableSymbols.erase(availableSymbols.begin() + found);
 
-    Dialog::screenBorder();
+    cout << Dialog::drawLine('=', 60) << endl;
+
+    // Change the Marker on the map
     string selection = charToString(getChar(availableSymbols));
-
     setMarker(selection);
-    setMarker(station->stationSymbol, 1);
-
+    setMarker(this->station->stationSymbol, 1);
     for(auto i : stations) {
         if(i[0] == selection[0]) {
-            station->stationName = i;
+            this->station->stationName = i;
+            this->station->stationSymbol = charToString(i[0]);
             break;
         }
     }

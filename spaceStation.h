@@ -26,42 +26,6 @@ public:
     string stationSymbol = "";
     Ship ship;
 
-    // ---------------------------------------------------------------------------------------------
-
-    void printWares() {
-        
-        cout << setw(17) << "Name" << setw(7) << "Price" 
-            << setw(10) << "Quantity" << "\n----------------------------------\n";
-        
-        for(int i = 0; i < wares.size(); i++) {
-            cout << setw(2) << (i + 1) << ".) ";
-            wares[i]->printGoodsData();
-        }
-    }    
-
-    // ---------------------------------------------------------------------------------------------
-
-    void interactWithStation() {
-        Dialog::screenBorder();
-        AsciiArt::saturn2();
-
-        vector<string> title = {this->stationName};
-        vector<vector<string>> content = {
-            {"Buy trade cargo"},
-            {"Sell trade cargo"},
-            {"Hire crew"},
-            {"Upgrade ship"},
-            {"Depart for next station"}
-        };
-
-        Dialog::generateDialogTerminal(title, content, 27, true);
-        Dialog::screenBorder();
-    }
-
-// =================================================================================================
-
-private:
-
     vector<Goods*> wares = {
         new Goods("Pencils",      generateRandomNumber(100), generateRandomNumber(100)),
         new Goods("Pens",         generateRandomNumber(100), generateRandomNumber(100)),
@@ -86,6 +50,69 @@ private:
         new Goods("Fire hose",    generateRandomNumber(100), generateRandomNumber(100)),  
         new Goods("Acorns",       generateRandomNumber(100), generateRandomNumber(100))
     };
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printWares(vector<Goods*> goods) {
+        vector<string> title = {"Name", "Price", "Qty"};
+        vector<vector<string>> content = {};
+        for(int i = 0; i < goods.size(); i++) {
+            content.push_back({goods[i]->name, 
+                               to_string(goods[i]->price),
+                               to_string(goods[i]->quantity)});
+        }
+        Dialog::centerText("Available Goods For Trade", 60);
+        Dialog::generateDialogTerminal(title, content, 45, true);
+    }    
+
+    // ---------------------------------------------------------------------------------------------
+
+    void purchaseGoods() {
+        printWares(this->wares);
+        Dialog::centerText("Make your selection", 60);
+        int goodSelection = getInt(this->wares.size());
+
+        Dialog::centerText("Purchase how many? (Max " + 
+                            to_string(this->wares[goodSelection - 1]->quantity) + ")", 60);
+        int qty = getInt(wares[goodSelection - 1]->quantity);
+
+        for(int i = 0; i < ship.cargo.size(); i++) {
+            if(ship.cargo[i]->name == wares[goodSelection - 1]->name) {
+                ship.cargo[i]->quantity += qty;                        
+                break;
+            }        
+            else {
+                ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
+                                               wares[goodSelection - 1]->price, qty));
+                break;                                               
+            }
+        }
+        wares[goodSelection - 1]->quantity -= qty;
+        ship.displayShipStatus();
+        printWares(ship.cargo);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void interactWithStation() {
+        cout << Dialog::drawLine('=', 60) << endl;
+        AsciiArt::saturn2();
+
+        string title = this->stationName;
+        vector<string> content = {
+            "Buy trade cargo",
+            "Sell trade cargo",
+            "Hire crew",
+            "View Ship",
+            "Depart for next station"
+        };
+
+        Dialog::generateDialogTerminal(title, content, 27, true);
+        cout << Dialog::drawLine('=', 60) << endl;
+    }
+
+
+// =================================================================================================
 };
 
 #endif // SPACESTATION_H
