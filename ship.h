@@ -20,21 +20,33 @@ public:
     int shipId = 0;
     int hull = 0;
     int cargoCapacity = 0;
+    int availableCargoSpace = 0;
     int crewSize = 0;
     int money = 1000;
+    int engine = 40;
 
-    vector<Goods*> cargo = {
-        new Goods("Rand Cargo1", 100, 10),
-        new Goods("Rand Cargo2",  85, 15),
-        new Goods("Rand Cargo3",  40, 90)
-    };
+    vector<Goods*> cargo = {};
 
     // ---------------------------------------------------------------------------------------------
 
-    void setCargoCapacity() {
+    void calculateAvailableCargoSpace() {
         for(auto i : cargo) {
-            cargoCapacity -= i->quantity;
+            availableCargoSpace = cargoCapacity;
+            availableCargoSpace -= i->quantity;
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    vector<vector<string>> formatCargoForPrinting() {
+        vector<vector<string>> formatted = {};
+        for(int i = 0; i < cargo.size(); i++) {
+            formatted.push_back({
+                cargo[i]->name,
+                to_string(cargo[i]->quantity)
+            });
+        }
+        return formatted;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -45,11 +57,13 @@ public:
 
         vector<string> content = {
             "Hull Integrity: " + to_string(this->hull),
-            "Cargo Capacity: " + to_string(this->cargoCapacity),
-            "Crew Capacity:  " + to_string(this->crewSize)
+            "Cargo:          " + to_string(this->availableCargoSpace) + "/" + to_string(this->cargoCapacity),
+            "Crew Capacity:  " + to_string(this->crewSize),
+            "Credits:        $" + to_string(this->money)
         };
 
-        Dialog::generateDialogTerminal(this->name, content, 19, false);
+        Dialog::generateDialogBox(this->name, content, 19, false);
+        Dialog::generateDialogBox(formatCargoForPrinting(), 60, false);
         cout << Dialog::drawLine('=', 60) << endl;
     }
 
@@ -64,6 +78,7 @@ public:
         this->name = shipNames[selection - 1];
         this->hull = ships[selection - 1][0];
         this->cargoCapacity = ships[selection - 1][1];
+        this->availableCargoSpace = cargoCapacity;
         this->crewSize = ships[selection -1][2];
         this->money -= ships[selection - 1][3];
 
@@ -85,8 +100,8 @@ private:
 
     vector<vector<int>> ships = {
     //   Hull, cargo, crew, price
-        { 100,    85,   10,   800},
-        { 200,    30,   15,   750},
+        { 100,  1500,   10,     1},
+        { 200,    30,   15,     2},
         { 150,    55,    8,   850},
         {  75,   100,    5,   675},
         { 250,     0,   20,   600},
@@ -117,7 +132,7 @@ private:
 
         string finances = "Credits: $" + to_string(money);
         Dialog::centerText(finances, 60);
-        Dialog::generateDialogTerminal(title, content, 40, true);
+        Dialog::generateDialogBox(content, 60, true);
         cout << Dialog::drawLine('=', 60) << endl;
         int selection = getInt(ships.size());
         return selection;

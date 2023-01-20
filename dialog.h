@@ -44,13 +44,39 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
-    void centerText(string text, int columnWidth) {
+    void centerText(string text, int columnWidth = 60) {
         cout << setw(columnWidth / 2 + text.length() / 2) << right << text << endl;
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    string formatTextWidth(string text, int columnWidth, int endOfLine = 0) {
+    string centerBrokenString(string text, int indent) {
+        size_t found = 0;
+        string indention = "";
+        while(indent--)
+            indention += " ";
+
+        do {
+            found = text.find("\n", found + 1);
+            text.insert(found + 1, indention);
+        } while(found!=std::string::npos);
+
+        return text;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    vector<string> splitString(string text) {
+        char split_char = '\n';
+        istringstream split(text);
+        vector<string> lines;
+        for(string each; getline(split, each, split_char); lines.push_back(each));
+        return lines;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    string wrapText(string text, int columnWidth, int endOfLine = 0) {
 
         if(columnWidth < 20)
             columnWidth = 20;
@@ -68,16 +94,87 @@ namespace Dialog {
         }
 
         if(endOfLine < text.length() && (found!=std::string::npos))
-            text = formatTextWidth(text, columnWidth, endOfLine);
+            text = wrapText(text, columnWidth, endOfLine);
         
         return text;    
     }
 
     // ---------------------------------------------------------------------------------------------
+    
+    int getDialogBoxWidth(string content) {
+        return content.length();
+    }
 
-    void generateDialogTerminal(vector<string> title, vector<vector<string>> content, 
+    // ---------------------------------------------------------------------------------------------
+
+    int getDialogBoxWidth(vector<string> content, bool enumerated = false) {
+        int length = getLongestStrLen(content);
+        if(enumerated)
+            length += 4;
+        return length;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    vector<int> getColumnWidths(vector<vector<string>> content, int enumerated = false) {
+        vector<int> colWidths = {};
+        int maxLen = 0;
+        for(int i = 0; i < content[0].size(); i++) {
+            maxLen = 0;
+            for(int j = 0; j < content.size(); j++) {
+                int newLen = content[j][i].length();
+                if(newLen > maxLen)
+                    maxLen = newLen;
+            }
+            colWidths.push_back(maxLen);
+        }
+        return colWidths;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    // int getDialogBoxWidth(vector<vector<string>> content, bool enumerated = false) {
+    //     int maxLength = 0, lengthOfLine = 0;
+    //     for(int i = 0; i < content.size(); i++) {
+    //         lengthOfLine = 0;
+    //         for(int j = 0; j < content[i].size(); j++) {
+    //             lengthOfLine += content[i][j].length();
+    //             if(lengthOfLine > maxLength) {
+    //                 maxLength = lengthOfLine;
+    //                 cout << "Longest line set to " << lengthOfLine << endl;
+    //             }
+    //         }
+    //     }
+    //     if(enumerated)
+    //         maxLength += 4;
+    //     maxLength += (content[0].size() -1) * 2; // For column spaces
+
+    //     cout << "Columns: " << content[0].size() << endl;
+    //     cout << "Max length = " << maxLength << endl;
+
+    //     return maxLength;
+    // }
+
+    int getDialogBoxWidth(vector<vector<string>> content, bool enumerated = false) {
+        vector<int> widths = getColumnWidths(content, enumerated);
+        int boxWidth = 0;
+        for(auto i : widths) {
+            boxWidth += (4 + (content.size() > 9));
+        }
+        // cout << "Box width before adjustments: " << boxWidth << endl;
+        if(enumerated)
+            boxWidth += 5;
+        boxWidth += (content[0].size() - 1) * 2;
+        
+        return boxWidth;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void generateDialogBox(vector<string> title, vector<vector<string>> content, 
                                 int dialogWidth = 30, bool enumerate = true) {
 
+        dialogWidth = getDialogBoxWidth(content, enumerate);
         int indention = (60 - dialogWidth) / 2;
         string horizontalLine = "";
         int w = dialogWidth;
@@ -103,7 +200,6 @@ namespace Dialog {
             cout << endl;
         }
 
-
         centerText(horizontalLine, 60);
 
         for(int i = 0; i < content.size(); i++) {
@@ -125,9 +221,10 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
-    void generateDialogTerminal(string title, vector<string> content, int dialogWidth = 30, 
+    void generateDialogBox(string title, vector<string> content, int dialogWidth = 30, 
                                 bool enumerate = true) {
 
+        dialogWidth = getDialogBoxWidth(content, enumerate);
         int indention = (60 - dialogWidth) / 2;
         string horizontalLine = "";
         int w = dialogWidth;        
@@ -153,29 +250,13 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
-    string centerBrokenString(string text, int indent) {
-        size_t found = 0;
-        string indention = "";
-        while(indent--)
-            indention += " ";
-
-        do {
-            found = text.find("\n", found + 1);
-            text.insert(found + 1, indention);
-        } while(found!=std::string::npos);
-
-        return text;
-    }
-
-    // ---------------------------------------------------------------------------------------------
-
-    void generateDialogTerminal(string title, string content, int dialogWidth = 30) {
+    void generateDialogBox(string title, string content, int dialogWidth = 30) {
 
         centerText(drawLine('-', dialogWidth), 60);
         centerText(title, 60);
         centerText(drawLine('-', dialogWidth), 60);
 
-        content = formatTextWidth(content, dialogWidth);
+        content = wrapText(content, dialogWidth);
         content = centerBrokenString(content, ((60 - dialogWidth) / 2));
         cout << content << endl;
         centerText(drawLine('-', dialogWidth), 60);
@@ -194,13 +275,46 @@ namespace Dialog {
         AsciiArt::saturn2();
         cout << drawLine('=', 60) << endl;
 
-        generateDialogTerminal(title, content, 50);
+        generateDialogBox(title, content, 50);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);
         cout << drawLine('=', 60) << endl;
         pause();
         clear();
     }
+
+
+    // ---------------------------------------------------------------------------------------------
+
+    void generateDialogBox(vector<vector<string>> content, int screenWidth, bool enumerated) {
+        int boxWidth = getDialogBoxWidth(content, enumerated);
+        int indentColumn = (60 - boxWidth) / 2;
+        vector<int> columnWidths = getColumnWidths(content);
+        int expand = (content.size() > 9) + 1;
+        
+        // cout << "Column Widths: {";
+        // for(auto i : columnWidths) {
+        //     cout << i << ", ";
+        // }
+        // cout << "}" << endl;
+        // cout << "boxWidth = " << boxWidth << endl;
+        // cout << "Indent Column: " << indentColumn << endl;
+
+        centerText(drawLine('-', boxWidth), screenWidth);
+        for(int i = 0; i < content.size(); i++) {
+            cout << setw(indentColumn) << " ";
+            if(enumerated) cout << setw(expand) << right << (i + 1) << left << ".) ";
+            cout << setw(columnWidths[0]) << left << content[i][0] << right << "  ";
+            for(int j = 1; j < content[i].size(); j++) {
+                cout << setw(columnWidths[j]) << content[i][j] << "  ";
+            }
+            cout << endl;
+        }
+        centerText(drawLine('-', boxWidth), screenWidth);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
 };
 
 #endif // Events_H

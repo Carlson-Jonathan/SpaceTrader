@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include "ship.h"
 #include "goods.h"
 #include "dialog.h"
@@ -62,32 +63,64 @@ public:
                                to_string(goods[i]->quantity)});
         }
         Dialog::centerText("Available Goods For Trade", 60);
-        Dialog::generateDialogTerminal(title, content, 45, true);
+        Dialog::generateDialogBox(title, content, 45, true);
     }    
 
     // ---------------------------------------------------------------------------------------------
 
     void purchaseGoods() {
+
+        // View and select items
         printWares(this->wares);
-        Dialog::centerText("Make your selection", 60);
+        string infoLine = "Credits: $" + to_string(ship.money) + "   Holds: " + 
+               to_string(ship.availableCargoSpace) + "/" + to_string(ship.cargoCapacity);
+        Dialog::centerText(infoLine);
+        Dialog::centerText("Make your selection:", 60);
         int goodSelection = getInt(this->wares.size());
 
-        Dialog::centerText("Purchase how many? (Max " + 
-                            to_string(this->wares[goodSelection - 1]->quantity) + ")", 60);
-        int qty = getInt(wares[goodSelection - 1]->quantity);
+        // Determine max goods that can be bought
+        int supplyLimit = this->wares[goodSelection - 1]->quantity;
+        int affordabaleLimit = ship.money / this->wares[goodSelection - 1]->price;
+        int availableSpace = ship.availableCargoSpace;
+        int limits[] = {supplyLimit, affordabaleLimit, availableSpace};
+        int* limit = min_element(limits, limits + 3);
+        cout << "supplyLimit = " << supplyLimit << endl;
+        cout << "affordabaleLimit = " << affordabaleLimit << endl;
+        cout << "availableSpace = " << availableSpace << endl;
+        cout << "Minimum int = " << *limit << endl;
 
-        for(int i = 0; i < ship.cargo.size(); i++) {
-            if(ship.cargo[i]->name == wares[goodSelection - 1]->name) {
-                ship.cargo[i]->quantity += qty;                        
-                break;
-            }        
-            else {
-                ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
+        if(!limit) {
+            purchaseGoods();
+            Dialog::centerText("You may not purchase this merchandise!");
+            return;
+        }
+
+        Dialog::centerText("Purchase how many? (Max " + to_string(*limit) + ")", 60);
+        int qty = getInt(*limit);
+
+        // If type of goods is already on ship, add to it. Otherwise make a new one.
+        if(!ship.cargo.size())
+            ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
                                                wares[goodSelection - 1]->price, qty));
-                break;                                               
+        else {
+            for(int i = 0; i < ship.cargo.size(); i++) {
+                if(ship.cargo[i]->name == wares[goodSelection - 1]->name) {
+                    ship.cargo[i]->quantity += qty;                        
+                    break;
+                }        
+                else {
+                    ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
+                                                wares[goodSelection - 1]->price, qty));
+                    break;                                               
+                }
             }
         }
+
+        // Adjust station supply/ship capacity/money
         wares[goodSelection - 1]->quantity -= qty;
+        ship.calculateAvailableCargoSpace();
+        ship.money -= this->wares[goodSelection - 1]->price * qty;
+
         ship.displayShipStatus();
         printWares(ship.cargo);
     }
@@ -107,7 +140,7 @@ public:
             "Depart for next station"
         };
 
-        Dialog::generateDialogTerminal(title, content, 27, true);
+        Dialog::generateDialogBox(title, content, 27, true);
         cout << Dialog::drawLine('=', 60) << endl;
     }
 

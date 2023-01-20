@@ -185,7 +185,7 @@ void Sector::stationSelector() {
     }
 
     string title = "Select Your Next Destination";
-    Dialog::generateDialogTerminal(title, line, 36, false);
+    Dialog::generateDialogBox(title, line, 36, false);
 
     // Create options and remove symbol for current station
     string availableSymbols = allStationSymbols;

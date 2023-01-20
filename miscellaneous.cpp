@@ -2,6 +2,7 @@
 #define JON
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 namespace Jon {
@@ -33,6 +34,17 @@ namespace Jon {
         cin.ignore(10000,'\n');
 
         return number;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    int getLongestStrLen(vector<string> strings) {
+        int longest = 0; 
+        for(auto i : strings) {
+            if(i.length() > longest)
+                longest = i.length();
+        }
+        return longest;
     }
 
     // ---------------------------------------------------------------------------------------------
