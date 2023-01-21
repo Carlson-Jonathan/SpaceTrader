@@ -25,7 +25,7 @@ public:
     int money = 1000;
     int engine = 40;
 
-    vector<Goods*> cargo = {};
+    vector<Goods*> cargo = {new Goods("Good", 12, 13), new Goods("bad", 67, 89)};
 
     // ---------------------------------------------------------------------------------------------
 
@@ -55,15 +55,16 @@ public:
         cout << Dialog::drawLine('=', 60) << endl;
         cout << AsciiArt::asciiShips[this->shipId] << endl;
 
-        vector<string> content = {
-            "Hull Integrity: " + to_string(this->hull),
-            "Cargo:          " + to_string(this->availableCargoSpace) + "/" + to_string(this->cargoCapacity),
-            "Crew Capacity:  " + to_string(this->crewSize),
-            "Credits:        $" + to_string(this->money)
+        vector<vector<string>> content = {
+            {"Hull Integrity:", to_string(this->hull)},
+            {"Cargo:", to_string(this->availableCargoSpace) + "/" + to_string(this->cargoCapacity)},
+            {"Crew Capacity:", to_string(this->crewSize)},
+            {"Credits:", to_string(this->money)}
         };
 
-        Dialog::generateDialogBox(this->name, content, 19, false);
-        Dialog::generateDialogBox(formatCargoForPrinting(), 60, false);
+        vector<string> title = {"Cargo"};
+        Dialog::generateDialogBox({this->name}, content);
+        Dialog::generateDialogBox(title, formatCargoForPrinting());
         cout << Dialog::drawLine('=', 60) << endl;
     }
 
@@ -132,7 +133,7 @@ private:
 
         string finances = "Credits: $" + to_string(money);
         Dialog::centerText(finances, 60);
-        Dialog::generateDialogBox(content, 60, true);
+        Dialog::generateDialogBox(title, content, true);
         cout << Dialog::drawLine('=', 60) << endl;
         int selection = getInt(ships.size());
         return selection;

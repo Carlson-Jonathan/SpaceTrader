@@ -55,15 +55,15 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void printWares(vector<Goods*> goods) {
-        vector<string> title = {"Name", "Price", "Qty"};
+        vector<string> title = {"Name", "$$", "Qty"};
         vector<vector<string>> content = {};
         for(int i = 0; i < goods.size(); i++) {
             content.push_back({goods[i]->name, 
                                to_string(goods[i]->price),
                                to_string(goods[i]->quantity)});
         }
-        Dialog::centerText("Available Goods For Trade", 60);
-        Dialog::generateDialogBox(title, content, 45, true);
+
+        Dialog::generateDialogBox(title, content, true);
     }    
 
     // ---------------------------------------------------------------------------------------------
@@ -71,11 +71,13 @@ public:
     void purchaseGoods() {
 
         // View and select items
+        cout << Dialog::drawLine('=', 60) << "\n\n";
         printWares(this->wares);
-        string infoLine = "Credits: $" + to_string(ship.money) + "   Holds: " + 
+        string infoLine = "Credits: $" + to_string(ship.money) + "   Cargo Holds: " + 
                to_string(ship.availableCargoSpace) + "/" + to_string(ship.cargoCapacity);
         Dialog::centerText(infoLine);
-        Dialog::centerText("Make your selection:", 60);
+        Dialog::centerText("Make your selection:\n", 60);
+        cout << Dialog::drawLine('=', 60) << endl;
         int goodSelection = getInt(this->wares.size());
 
         // Determine max goods that can be bought
@@ -122,7 +124,6 @@ public:
         ship.money -= this->wares[goodSelection - 1]->price * qty;
 
         ship.displayShipStatus();
-        printWares(ship.cargo);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -140,7 +141,7 @@ public:
             "Depart for next station"
         };
 
-        Dialog::generateDialogBox(title, content, 27, true);
+        Dialog::generateDialogBox(content, true);
         cout << Dialog::drawLine('=', 60) << endl;
     }
 

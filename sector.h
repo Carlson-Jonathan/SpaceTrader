@@ -165,7 +165,6 @@ void Sector::gameLoop() {
             while(true) {
                 displayMap();
                 stationSelector();
-                // Dialog::pause();
                 Dialog::clear();
             }
             displayMap();
@@ -179,13 +178,20 @@ void Sector::gameLoop() {
 
 void Sector::stationSelector() {
 
-    vector<string> line = stations;
+    vector<vector<string>> stationsList = {};
+
     for(int i = 0; i < stations.size(); i++) {
-        line[i] += (" (" + to_string(getDistance(this->station->stationSymbol, charToString(this->allStationSymbols[i]))) + " LYs)");
+        string dist = "";
+        dist = " (" + to_string(getDistance(this->station->stationSymbol, 
+               charToString(this->allStationSymbols[i]))) + " LYs)";
+        stationsList.push_back({stations[i], dist});
     }
 
-    string title = "Select Your Next Destination";
-    Dialog::generateDialogBox(title, line, 36, false);
+
+    cout << endl;
+    vector<string> title = {{""}};
+    Dialog::centerText("Select Your Next Destination");
+    Dialog::generateDialogBox(title, stationsList);
 
     // Create options and remove symbol for current station
     string availableSymbols = allStationSymbols;
