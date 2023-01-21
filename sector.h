@@ -189,8 +189,7 @@ void Sector::stationSelector() {
 
 
     cout << endl;
-    vector<string> title = {{""}};
-    Dialog::centerText("Select Your Next Destination");
+    string title = "Select Next Destination";
     Dialog::generateDialogBox(title, stationsList);
 
     // Create options and remove symbol for current station

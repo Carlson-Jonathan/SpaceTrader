@@ -55,7 +55,7 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void printWares(vector<Goods*> goods) {
-        vector<string> title = {"Name", "$$", "Qty"};
+        vector<string> title = {"Name", "Price", "Quantity"};
         vector<vector<string>> content = {};
         for(int i = 0; i < goods.size(); i++) {
             content.push_back({goods[i]->name, 
@@ -86,10 +86,11 @@ public:
         int availableSpace = ship.availableCargoSpace;
         int limits[] = {supplyLimit, affordabaleLimit, availableSpace};
         int* limit = min_element(limits, limits + 3);
-        cout << "supplyLimit = " << supplyLimit << endl;
-        cout << "affordabaleLimit = " << affordabaleLimit << endl;
-        cout << "availableSpace = " << availableSpace << endl;
-        cout << "Minimum int = " << *limit << endl;
+        
+        // cout << "supplyLimit = " << supplyLimit << endl;
+        // cout << "affordabaleLimit = " << affordabaleLimit << endl;
+        // cout << "availableSpace = " << availableSpace << endl;
+        // cout << "Minimum int = " << *limit << endl;
 
         if(!limit) {
             purchaseGoods();
@@ -141,7 +142,7 @@ public:
             "Depart for next station"
         };
 
-        Dialog::generateDialogBox(content, true);
+        Dialog::generateDialogBox(this->stationName, content, true);
         cout << Dialog::drawLine('=', 60) << endl;
     }
 

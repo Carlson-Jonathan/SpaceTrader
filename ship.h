@@ -62,8 +62,8 @@ public:
             {"Credits:", to_string(this->money)}
         };
 
-        vector<string> title = {"Cargo"};
-        Dialog::generateDialogBox({this->name}, content);
+        string title = "Cargo";
+        Dialog::generateDialogBox(this->name, content);
         Dialog::generateDialogBox(title, formatCargoForPrinting());
         cout << Dialog::drawLine('=', 60) << endl;
     }
@@ -131,7 +131,7 @@ private:
             }
         }
 
-        string finances = "Credits: $" + to_string(money);
+        string finances = "Credits: $" + to_string(money) + "\n";
         Dialog::centerText(finances, 60);
         Dialog::generateDialogBox(title, content, true);
         cout << Dialog::drawLine('=', 60) << endl;
