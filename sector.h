@@ -10,11 +10,10 @@ using namespace std;
 class Sector {
 public:
 
-    Sector() {
+    Sector() : station("Enceladus Station") {
         setMarker("E");
         setStationSymbols();
-        this->station = new SpaceStation(stations[0]); 
-        station->ship.setupShip();
+        this->station.ship.setupShip();
         gameLoop();
     };
 
@@ -22,7 +21,7 @@ public:
 
 private:
 
-    SpaceStation* station;
+    SpaceStation station;
     string allStationSymbols = "";
 
     vector<string> sectorMap = {" ",
@@ -74,7 +73,7 @@ private:
 // =================================================================================================
 
 void Sector::displayMap() {
-    string mapTitle = "Current Location: " + station->stationName;
+    string mapTitle = "Current Location: " + station.stationName;
     cout << Dialog::drawLine('=', 60) << endl;
     Dialog::centerText(mapTitle, 60);
     cout << Dialog::drawLine('=', 60) << endl;
@@ -145,20 +144,23 @@ int Sector::getDistance(string station, string destination) {
 // -------------------------------------------------------------------------------------------------
 
 void Sector::gameLoop() {
-    station->interactWithStation();
+    station.interactWithStation();
     int selection = getInt(5);
     switch (selection) {
         case 1: 
             Dialog::clear();
-            station->purchaseGoods();
+            while(true) {
+                station.purchaseGoods();
+                station.printWares(station.ship.cargo);
+            }
             break;
         case 2:
             Dialog::clear();
-            station->printWares(station->ship.cargo);
+            station.printWares(station.ship.cargo);
             break;
         case 4:
             Dialog::clear();
-            station->ship.displayShipStatus();
+            station.ship.displayShipStatus();
             break;            
         case 5: 
             Dialog::clear();
@@ -179,22 +181,21 @@ void Sector::gameLoop() {
 void Sector::stationSelector() {
 
     vector<vector<string>> stationsList = {};
-
     for(int i = 0; i < stations.size(); i++) {
         string dist = "";
-        dist = " (" + to_string(getDistance(this->station->stationSymbol, 
+        dist = " (" + to_string(getDistance(this->station.stationSymbol, 
                charToString(this->allStationSymbols[i]))) + " LYs)";
         stationsList.push_back({stations[i], dist});
     }
 
-
     cout << endl;
-    string title = "Select Next Destination";
+    Dialog::centerText("Select Next Destination\n");
+    vector<string> title = {"Station", "Distance"};
     Dialog::generateDialogBox(title, stationsList);
 
     // Create options and remove symbol for current station
     string availableSymbols = allStationSymbols;
-    size_t found = allStationSymbols.find(station->stationSymbol);
+    size_t found = allStationSymbols.find(station.stationSymbol);
     if(found!=std::string::npos) 
         availableSymbols.erase(availableSymbols.begin() + found);
 
@@ -203,11 +204,11 @@ void Sector::stationSelector() {
     // Change the Marker on the map
     string selection = charToString(getChar(availableSymbols));
     setMarker(selection);
-    setMarker(this->station->stationSymbol, 1);
+    setMarker(this->station.stationSymbol, 1);
     for(auto i : stations) {
         if(i[0] == selection[0]) {
-            this->station->stationName = i;
-            this->station->stationSymbol = charToString(i[0]);
+            this->station.stationName = i;
+            this->station.stationSymbol = charToString(i[0]);
             break;
         }
     }

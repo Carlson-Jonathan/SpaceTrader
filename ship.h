@@ -25,14 +25,14 @@ public:
     int money = 1000;
     int engine = 40;
 
-    vector<Goods*> cargo = {new Goods("Good", 12, 13), new Goods("bad", 67, 89)};
+    vector<Goods*> cargo = {};
 
     // ---------------------------------------------------------------------------------------------
 
     void calculateAvailableCargoSpace() {
-        for(auto i : cargo) {
-            availableCargoSpace = cargoCapacity;
-            availableCargoSpace -= i->quantity;
+        availableCargoSpace = cargoCapacity;
+        for(int i = 0; i < cargo.size(); i++) {
+            availableCargoSpace -= cargo[i]->quantity;
         }
     }
 

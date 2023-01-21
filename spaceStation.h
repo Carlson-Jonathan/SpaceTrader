@@ -73,7 +73,7 @@ public:
         // View and select items
         cout << Dialog::drawLine('=', 60) << "\n\n";
         printWares(this->wares);
-        string infoLine = "Credits: $" + to_string(ship.money) + "   Cargo Holds: " + 
+        string infoLine = "Credits: $" + to_string(ship.money) + "   Cargo Space: " + 
                to_string(ship.availableCargoSpace) + "/" + to_string(ship.cargoCapacity);
         Dialog::centerText(infoLine);
         Dialog::centerText("Make your selection:\n", 60);
@@ -86,7 +86,7 @@ public:
         int availableSpace = ship.availableCargoSpace;
         int limits[] = {supplyLimit, affordabaleLimit, availableSpace};
         int* limit = min_element(limits, limits + 3);
-        
+
         // cout << "supplyLimit = " << supplyLimit << endl;
         // cout << "affordabaleLimit = " << affordabaleLimit << endl;
         // cout << "availableSpace = " << availableSpace << endl;
@@ -106,16 +106,21 @@ public:
             ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
                                                wares[goodSelection - 1]->price, qty));
         else {
+
+            // Search for item and increment
+            bool itemExists = false;
             for(int i = 0; i < ship.cargo.size(); i++) {
+                cout << "Wares[i] = " << wares[goodSelection - 1]->name << endl;
+                cout << "Cargo[i] = " << ship.cargo[i]->name << endl;
                 if(ship.cargo[i]->name == wares[goodSelection - 1]->name) {
-                    ship.cargo[i]->quantity += qty;                        
+                    ship.cargo[i]->quantity += qty;  
+                    itemExists = true;                      
                     break;
                 }        
-                else {
-                    ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
-                                                wares[goodSelection - 1]->price, qty));
-                    break;                                               
-                }
+            }
+            if(!itemExists) {
+                ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
+                                            wares[goodSelection - 1]->price, qty));
             }
         }
 
@@ -132,7 +137,6 @@ public:
     void interactWithStation() {
         cout << Dialog::drawLine('=', 60) << endl;
         AsciiArt::saturn2();
-
         string title = this->stationName;
         vector<string> content = {
             "Buy trade cargo",

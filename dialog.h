@@ -52,6 +52,29 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
+    vector<vector<string>> buildTable(vector<vector<string>> content) {
+        vector<vector<string>> fContent = {};
+        for(int i = 0; i < content[0].size(); i++) {
+            fContent.push_back({});
+            for(int j = 0; j < content.size(); j++) {
+                fContent[i].push_back(content[j][i]);
+            }
+        }
+        return fContent;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    vector<string> vectorIntsToStrings(vector<int> content) {
+        vector<string> fContent = {};
+        for(auto i : content) {
+            fContent.push_back(to_string(i));
+        }
+        return fContent;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     string wrapText(string text, int columnWidth, int endOfLine = 0) {
 
         if(columnWidth < 20)
@@ -92,6 +115,7 @@ namespace Dialog {
     vector<int> getColumnWidths(vector<vector<string>> content, int enumerated = false) {
         vector<int> colWidths = {};
         int maxLen = 0;
+        if(!content.size()) return {0};
         for(int i = 0; i < content[0].size(); i++) {
             maxLen = 0;
             for(int j = 0; j < content.size(); j++) {
@@ -116,7 +140,8 @@ namespace Dialog {
         if(enumerated)
             boxWidth += 4 + (content.size() > 9); // For numbering
 
-        boxWidth += (content[0].size() - 1) * 2; // Space between columns
+        if(content.size())
+            boxWidth += (content[0].size() - 1) * 2; // Space between columns
         
         return boxWidth;
     }
@@ -183,8 +208,6 @@ namespace Dialog {
         vector<int> columnWidths = getColumnWidths(content);
         int expand = (content.size() > 9) + 1;
 
-        // debugDialogBox(boxWidth, indentColumn, columnWidths);
-        
         centerText(title);        
         centerText(drawLine('-', boxWidth), screenWidth);
         for(int i = 0; i < content.size(); i++) {
