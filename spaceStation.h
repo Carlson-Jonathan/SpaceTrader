@@ -21,36 +21,60 @@ public:
     SpaceStation(string stationName) {
         this->stationName = stationName;
         this->stationSymbol = charToString(stationName[0]);
+        populateWares();
+        randomizeMerchAttr(0);
+        randomizeMerchAttr(1);
     }
 
     string stationName = "";
     string stationSymbol = "";
     Ship ship;
 
-    vector<Goods*> wares = {//             Price                     Quantity           
-        new Goods("Pencils",      generateRandomNumber(10, 2), generateRandomNumber(350)),
-        new Goods("Pens",         generateRandomNumber(15, 8), generateRandomNumber(100, 80)),
-        new Goods("Diamonds",     generateRandomNumber(300, 250), generateRandomNumber(8, 3)),
-        new Goods("Forks",        generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Diapers",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Fingers",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Turkey",       generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Clowns",       generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Rainbows",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Wrachets",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Icecream",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Snot drip",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Hair plug",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Dandilion",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Shovels",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Cat nip",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Nick nack",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("French fry",   generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Fire ladder",  generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Jumping Jack", generateRandomNumber(100), generateRandomNumber(100)),  
-        new Goods("Fire hose",    generateRandomNumber(100), generateRandomNumber(100)),  
-        new Goods("Acorns",       generateRandomNumber(100), generateRandomNumber(100))
+    vector<Goods*> wares = {};
+    vector<string> merchandiseList = {
+        "Pencils",    
+        "Pens",      
+        "Forks",      
+        "Diapers",    
+        "Fingers",   
+        "Turkey",      
+        "Clowns",      
+        "Rainbows",   
+        "Wrachets",   
+        "Icecream",   
+        "Snot drip",  
+        "Hair plug",  
+        "Dandilion",   
+        "Shovels",     
+        "Cat nip",     
+        "Nick nack",   
+        "French fry",   
+        "Fire ladder",  
+        "Jumping Jack", 
+        "Fire hose",     
+        "Acorns",
+        "Telescope",
+        "Fluffy Plush"      
     };
+
+    // ---------------------------------------------------------------------------------------------
+
+    void randomizeMerchAttr(int attribute) {
+        for(int i = 0; i < wares.size(); i++) {
+            if(attribute == 0 )
+                wares[i]->price = generateRandomNumber(100);
+            else if(attribute == 1)
+                wares[i]->quantity = generateRandomNumber(100);
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void populateWares() {
+        for(auto i : merchandiseList) {
+            wares.push_back(new Goods(i, 0, 0));
+        }
+    }
 
     // ---------------------------------------------------------------------------------------------
 
@@ -195,20 +219,48 @@ public:
 
     // ---------------------------------------------------------------------------------------------
 
-    void interactWithStation() {
-        cout << Dialog::drawLine('=', 60) << endl;
-        AsciiArt::saturn2();
+    void printStationMenu() {
         string title = this->stationName;
         vector<string> content = {
             "Buy trade cargo",
             "Sell trade cargo",
             "Hire crew",
-            "View Ship",
-            "Depart for next station"
+            "View Ship Info",
+            "Leave Station"
         };
 
         Dialog::generateDialogBox(this->stationName, content, true);
-        cout << Dialog::drawLine('=', 60) << endl;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void interactWithStation() {
+        bool onStation = true;
+        do {
+            Dialog::clear();
+            AsciiArt::saturn2();
+            printStationMenu();
+            int selection = getInt(5);
+            switch(selection) {
+                case 1: 
+                    purchaseGoods();
+                    break;
+                case 2:
+                    sellGoods();
+                    break;
+                case 4:
+                    Dialog::clear();
+                    cout << AsciiArt::asciiShips[ship.shipId] << endl;
+                    ship.displayShipStatus();
+                    Dialog::pause();
+                    break;   
+                case 5:
+                    onStation = false;
+                    break; 
+                default:
+                    break;
+            }     
+        } while(onStation);   
     }
 
 

@@ -12,7 +12,8 @@ public:
 
     Sector() : station("Enceladus Station") {
         setMarker("E");
-        setStationSymbols();
+        populateStationSymbols();
+        setThisStationsSymbol("E");
         this->station.ship.setupShip();
         gameLoop();
     };
@@ -67,7 +68,9 @@ private:
     int            getDistance          (string station, string destination);
     void           gameLoop             ();
     void           stationSelector      ();
-    void           setStationSymbols    ();
+    void           populateStationSymbols();
+    void           displayStationOptions();
+    void setThisStationsSymbol(string symbol);
 };
 
 // =================================================================================================
@@ -144,64 +147,26 @@ int Sector::getDistance(string station, string destination) {
 // -------------------------------------------------------------------------------------------------
 
 void Sector::gameLoop() {
-    station.interactWithStation();
-    int selection = getInt(5);
-    switch (selection) {
-        case 1: 
-            station.purchaseGoods();
-            break;
-        case 2:
-            station.sellGoods();
-            break;
-        case 4:
-            Dialog::clear();
-            station.ship.displayShipStatus();
-            break;            
-        case 5: 
-            Dialog::clear();
-            while(true) {
-                displayMap();
-                stationSelector();
-                Dialog::clear();
-            }
-            displayMap();
-            break;
-        default:
-            break;
+    bool gameover = false;
+    do {
+        station.interactWithStation();
+        stationSelector();
+    } while (!gameover);
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void Sector::populateStationSymbols() {
+    for(int i = 0; i < stations.size(); i++) {
+        allStationSymbols += stations[i][0];
     }
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void Sector::stationSelector() {
-
-    vector<vector<string>> stationsList = {};
-    for(int i = 0; i < stations.size(); i++) {
-        string dist = "";
-        dist = " (" + to_string(getDistance(this->station.stationSymbol, 
-               charToString(this->allStationSymbols[i]))) + " LYs)";
-        stationsList.push_back({stations[i], dist});
-    }
-
-    cout << endl;
-    Dialog::centerText("Select Next Destination\n");
-    vector<string> title = {"Station", "Distance"};
-    Dialog::generateDialogBox(title, stationsList);
-
-    // Create options and remove symbol for current station
-    string availableSymbols = allStationSymbols;
-    size_t found = allStationSymbols.find(station.stationSymbol);
-    if(found!=std::string::npos) 
-        availableSymbols.erase(availableSymbols.begin() + found);
-
-    cout << Dialog::drawLine('=', 60) << endl;
-
-    // Change the Marker on the map
-    string selection = charToString(getChar(availableSymbols));
-    setMarker(selection);
-    setMarker(this->station.stationSymbol, 1);
+void Sector::setThisStationsSymbol(string symbol) {
     for(auto i : stations) {
-        if(i[0] == selection[0]) {
+        if(i[0] == symbol[0]) {
             this->station.stationName = i;
             this->station.stationSymbol = charToString(i[0]);
             break;
@@ -211,10 +176,46 @@ void Sector::stationSelector() {
 
 // -------------------------------------------------------------------------------------------------
 
-void Sector::setStationSymbols() {
+void Sector::displayStationOptions() {
+    vector<vector<string>> stationsList = {};
+
     for(int i = 0; i < stations.size(); i++) {
-        allStationSymbols += stations[i][0];
+        string dist = "";
+        dist = to_string(getDistance(this->station.stationSymbol, 
+            charToString(this->allStationSymbols[i]))) + " LYs";
+        stationsList.push_back({stations[i], dist});
     }
+
+    vector<string> title = {"Station", "Distance"};
+    Dialog::generateDialogBox(title, stationsList);
+
 }
+
+// -------------------------------------------------------------------------------------------------
+
+void Sector::stationSelector() {
+    bool confirmed = false;
+    do {
+        Dialog::clear();
+        displayMap();
+        Dialog::centerText("Select Next Destination\n");
+        displayStationOptions();
+        Dialog::centerText("[X] to confirm selection.");
+
+        string selection = charToString(getChar(allStationSymbols + "x" + "X"));
+
+        if(selection == "X" || selection == "x")
+            confirmed = true;
+        else {
+            setMarker(this->station.stationSymbol, 1); // Erase current station marker
+            setMarker(selection); 
+            setThisStationsSymbol(selection);
+        }
+
+    } while(!confirmed);
+}
+
+// -------------------------------------------------------------------------------------------------
+
 
 #endif // GOODS_H

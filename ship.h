@@ -53,7 +53,6 @@ public:
 
     void displayShipStatus() {
         calculateAvailableCargoSpace();
-        cout << Dialog::drawLine('=', 60) << "\n\n";
 
         vector<vector<string>> content = {
             {"Hull Integrity:", to_string(this->hull)},
@@ -66,7 +65,6 @@ public:
         string title = "Cargo";
         Dialog::generateDialogBox(this->name, content);
         Dialog::generateDialogBox(title, formatCargoForPrinting());
-        cout << Dialog::drawLine('=', 60) << endl;
     }
 
     // ---------------------------------------------------------------------------------------------
