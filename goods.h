@@ -13,6 +13,10 @@ public:
         this->quantity = quantity;
     }
 
+    ~Goods() {
+        cout << "Goods object " << name << " is being destroyed." << endl;
+    }
+
     string name = "";
     int price = 0;
     int quantity = 0;

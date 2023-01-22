@@ -27,10 +27,10 @@ public:
     string stationSymbol = "";
     Ship ship;
 
-    vector<Goods*> wares = {
-        new Goods("Pencils",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Pens",         generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Straws",       generateRandomNumber(100), generateRandomNumber(100)),
+    vector<Goods*> wares = {//             Price                     Quantity           
+        new Goods("Pencils",      generateRandomNumber(10, 2), generateRandomNumber(350)),
+        new Goods("Pens",         generateRandomNumber(15, 8), generateRandomNumber(100, 80)),
+        new Goods("Diamonds",     generateRandomNumber(300, 250), generateRandomNumber(8, 3)),
         new Goods("Forks",        generateRandomNumber(100), generateRandomNumber(100)),
         new Goods("Diapers",      generateRandomNumber(100), generateRandomNumber(100)),
         new Goods("Fingers",      generateRandomNumber(100), generateRandomNumber(100)),
@@ -54,82 +54,121 @@ public:
 
     // ---------------------------------------------------------------------------------------------
 
-    void printWares(vector<Goods*> goods) {
+    void printWares(const vector<Goods*> & goods, bool enumerated = true) {
         vector<string> title = {"Name", "Price", "Quantity"};
         vector<vector<string>> content = {};
         for(int i = 0; i < goods.size(); i++) {
-            content.push_back({goods[i]->name, 
-                               to_string(goods[i]->price),
-                               to_string(goods[i]->quantity)});
+            string name = goods[i]->name;
+            int price = goods[i]->price;
+            int qty = goods[i]->quantity;
+            vector<string> line = {name, to_string(price), to_string(qty)};
+            content.push_back(line);
         }
-
-        Dialog::generateDialogBox(title, content, true);
+        Dialog::generateDialogBox(title, content, enumerated);
     }    
 
     // ---------------------------------------------------------------------------------------------
 
-    void purchaseGoods() {
-
-        // View and select items
-        cout << Dialog::drawLine('=', 60) << "\n\n";
-        printWares(this->wares);
-        string infoLine = "Credits: $" + to_string(ship.money) + "   Cargo Space: " + 
-               to_string(ship.availableCargoSpace) + "/" + to_string(ship.cargoCapacity);
-        Dialog::centerText(infoLine);
-        Dialog::centerText("Make your selection:\n", 60);
-        cout << Dialog::drawLine('=', 60) << endl;
-        int goodSelection = getInt(this->wares.size());
-
-        // Determine max goods that can be bought
-        int supplyLimit = this->wares[goodSelection - 1]->quantity;
-        int affordabaleLimit = ship.money / this->wares[goodSelection - 1]->price;
+    int getPurchasingLimit(int selection) {
+        int supplyLimit = this->wares[selection - 1]->quantity;
+        int affordabaleLimit = ship.money / this->wares[selection - 1]->price;
         int availableSpace = ship.availableCargoSpace;
         int limits[] = {supplyLimit, affordabaleLimit, availableSpace};
         int* limit = min_element(limits, limits + 3);
+        return *limit;
+    }
 
-        // cout << "supplyLimit = " << supplyLimit << endl;
-        // cout << "affordabaleLimit = " << affordabaleLimit << endl;
-        // cout << "availableSpace = " << availableSpace << endl;
-        // cout << "Minimum int = " << *limit << endl;
+    // ---------------------------------------------------------------------------------------------
 
-        if(!limit) {
-            purchaseGoods();
-            Dialog::centerText("You may not purchase this merchandise!");
-            return;
-        }
-
-        Dialog::centerText("Purchase how many? (Max " + to_string(*limit) + ")", 60);
-        int qty = getInt(*limit);
-
+    void transactPurchase(int selection, int qty) {
         // If type of goods is already on ship, add to it. Otherwise make a new one.
         if(!ship.cargo.size())
-            ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
-                                               wares[goodSelection - 1]->price, qty));
+            ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+                                               wares[selection - 1]->price, qty));
         else {
-
             // Search for item and increment
             bool itemExists = false;
             for(int i = 0; i < ship.cargo.size(); i++) {
-                cout << "Wares[i] = " << wares[goodSelection - 1]->name << endl;
-                cout << "Cargo[i] = " << ship.cargo[i]->name << endl;
-                if(ship.cargo[i]->name == wares[goodSelection - 1]->name) {
+                if(ship.cargo[i]->name == wares[selection - 1]->name) {
                     ship.cargo[i]->quantity += qty;  
                     itemExists = true;                      
                     break;
                 }        
             }
             if(!itemExists) {
-                ship.cargo.push_back(new Goods(wares[goodSelection - 1]->name,
-                                            wares[goodSelection - 1]->price, qty));
+                ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+                                            wares[selection - 1]->price, qty));
             }
         }
+        wares[selection - 1]->quantity -= qty;
+        ship.money -= this->wares[selection - 1]->price * qty;
+    }
 
-        // Adjust station supply/ship capacity/money
-        wares[goodSelection - 1]->quantity -= qty;
-        ship.calculateAvailableCargoSpace();
-        ship.money -= this->wares[goodSelection - 1]->price * qty;
+    // ---------------------------------------------------------------------------------------------
+
+    string transactSale(int selection, int qty) {
+        int price = 0;
+        string sale = "";
+        for(int i = 0; i < wares.size(); i++) {
+            if(ship.cargo[selection - 1]->name == wares[i]->name) {
+                sale = "Selling " + to_string(qty) + " " + wares[i]->name +
+                        " @ $" + to_string(wares[i]->price) + "ea. (+$" + 
+                        to_string(wares[i]->price * qty) + ")";
+                int price = wares[i]->price;
+                this->ship.cargo[selection - 1]->quantity -= qty;
+                this->wares[i]->quantity += qty;
+                this->ship.money += (price * qty);
+                this->ship.availableCargoSpace += qty;  
+                break;
+            }
+        }
+        if(!ship.cargo[selection - 1]->quantity)
+            ship.cargo.erase(ship.cargo.begin() + (selection -1));
+
+        return sale;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void purchaseGoods() {
+
+        printWares(wares);
+        int selection = getInt(this->wares.size());
+        int limit = getPurchasingLimit(selection);
+
+        if(!limit) {
+            Dialog::centerText("You cannot buy that item.");
+            Dialog::pause();
+            return;
+        }
+
+        Dialog::centerText("Purchase how many? (Max " + to_string(limit) + ")", 60);
+        int qty = getInt(limit);
+        transactPurchase(selection, qty);
 
         ship.displayShipStatus();
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printSaleMenu(string addedText) {
+        Dialog::clear();
+        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        printWares(wares, false);
+        Dialog::centerText("<Your Merchandise>\n");
+        Dialog::centerText("Credits: $" + to_string(ship.money));
+        printWares(ship.cargo);
+        Dialog::centerText(addedText);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void sellGoods() {
+        printSaleMenu("Select Item To Sell");
+        int selection = getInt(ship.cargo.size());
+        printSaleMenu("Sell how many " + ship.cargo[selection - 1]->name + "?");
+        int qty = getInt(ship.cargo[selection - 1]->quantity);
+        transactSale(selection, qty);
     }
 
     // ---------------------------------------------------------------------------------------------

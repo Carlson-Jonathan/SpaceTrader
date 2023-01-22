@@ -174,7 +174,7 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
-    void generateDialogBox(vector<string> title, vector<vector<string>> content, 
+    void generateDialogBox(vector<string> & title, vector<vector<string>> & content, 
                            bool enumerated = false, int screenWidth = 60) {
         content.push_back(title);
         int boxWidth = getDialogBoxWidth(content, enumerated);

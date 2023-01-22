@@ -155,8 +155,9 @@ void Sector::gameLoop() {
             }
             break;
         case 2:
-            Dialog::clear();
-            station.printWares(station.ship.cargo);
+            while(true) {
+                station.sellGoods();
+            }
             break;
         case 4:
             Dialog::clear();

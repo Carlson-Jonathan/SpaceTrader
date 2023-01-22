@@ -8,7 +8,7 @@ using namespace std;
 namespace Jon {
 
     int generateRandomNumber(int max = 10, int min = 1) {
-        return rand() % (max + 1 - min) + (min - 1);
+        return (rand() % (max + 1 - min) + (min - 1)) + 1;
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ public:
     int money = 1000;
     int engine = 40;
 
-    vector<Goods*> cargo = {};
+    vector<Goods*> cargo = {new Goods("Pens", 90, 87)};
 
     // ---------------------------------------------------------------------------------------------
 
@@ -52,13 +52,14 @@ public:
     // ---------------------------------------------------------------------------------------------
 
     void displayShipStatus() {
-        cout << Dialog::drawLine('=', 60) << endl;
-        cout << AsciiArt::asciiShips[this->shipId] << endl;
+        calculateAvailableCargoSpace();
+        cout << Dialog::drawLine('=', 60) << "\n\n";
 
         vector<vector<string>> content = {
             {"Hull Integrity:", to_string(this->hull)},
-            {"Cargo:", to_string(this->availableCargoSpace) + "/" + to_string(this->cargoCapacity)},
+            {"Cargo Space:", to_string(this->availableCargoSpace) + "/" + to_string(this->cargoCapacity)},
             {"Crew Capacity:", to_string(this->crewSize)},
+            {"Engine:", to_string(this->engine)},
             {"Credits:", to_string(this->money)}
         };
 
@@ -86,6 +87,7 @@ public:
         Dialog::clear();
 
         Dialog::centerText("Ship Purchased!", 60);
+        cout << AsciiArt::asciiShips[this->shipId] << endl;
         this->shipId = selection - 1;
         displayShipStatus();
 
@@ -100,13 +102,13 @@ private:
     vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier", "Hornet"};
 
     vector<vector<int>> ships = {
-    //   Hull, cargo, crew, price
-        { 100,  1500,   10,     1},
-        { 200,    30,   15,     2},
-        { 150,    55,    8,   850},
-        {  75,   100,    5,   675},
-        { 250,     0,   20,   600},
-        {  15,     5,    3,   150}
+    //   Hull, cargo, crew, price, eng
+        { 100,  1500,   10,     1,  40},
+        { 200,    30,   15,     2,  30},
+        { 150,    55,    8,   850,  50},
+        {  75,   100,    5,   675,  70},
+        { 250,     0,   20,   600,  90},
+        {  15,     5,    3,   150,  20}
     };
 
 
@@ -114,7 +116,7 @@ private:
 
     int shipSelector() {
 
-        vector<string> title = {"Name", "Hull", "Cargo", "Crew", "Price"};
+        vector<string> title = {"Name", "Hull", "Cargo", "Crew", "Price", "Engine"};
 
         vector<vector<string>> content;
         for(int i = 0; i < ships.size(); i++) {
