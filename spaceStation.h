@@ -130,23 +130,38 @@ public:
 
     // ---------------------------------------------------------------------------------------------
 
+    void printPurchaseMenu(string addedText) {
+        Dialog::clear();
+        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        printWares(wares, true);
+        Dialog::centerText("<Your Merchandise>");
+        Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
+        printWares(ship.cargo, false);
+        Dialog::centerText(addedText);
+        Dialog::centerText("0.) Cancel");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     void purchaseGoods() {
-
-        printWares(wares);
-        int selection = getInt(this->wares.size());
-        int limit = getPurchasingLimit(selection);
-
-        if(!limit) {
-            Dialog::centerText("You cannot buy that item.");
-            Dialog::pause();
-            return;
-        }
-
-        Dialog::centerText("Purchase how many? (Max " + to_string(limit) + ")", 60);
-        int qty = getInt(limit);
-        transactPurchase(selection, qty);
-
-        ship.displayShipStatus();
+        int selection = 0;
+        do {
+            printPurchaseMenu("Select an item to buy.");
+            selection = getInt(wares.size(), 0);
+            if(selection) {
+                int limit = getPurchasingLimit(selection);
+                if(!limit) {
+                    Dialog::centerText("You cannot buy that item.");
+                    Dialog::pause();
+                    return;
+                }
+                printPurchaseMenu("Buy how many " + wares[selection - 1]->name + "? (Max " + 
+                                to_string(limit) + ")");
+                int qty = getInt(wares[selection - 1]->quantity, 0);
+                if(qty)
+                    transactPurchase(selection, qty);
+            }
+        } while(selection);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -155,20 +170,27 @@ public:
         Dialog::clear();
         Dialog::centerText("<" + this->stationName + " Merchandise>\n");
         printWares(wares, false);
-        Dialog::centerText("<Your Merchandise>\n");
-        Dialog::centerText("Credits: $" + to_string(ship.money));
+        Dialog::centerText("<Your Merchandise>");
+        Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
         printWares(ship.cargo);
         Dialog::centerText(addedText);
+        Dialog::centerText("0.) Cancel");
     }
 
     // ---------------------------------------------------------------------------------------------
 
     void sellGoods() {
-        printSaleMenu("Select Item To Sell");
-        int selection = getInt(ship.cargo.size());
-        printSaleMenu("Sell how many " + ship.cargo[selection - 1]->name + "?");
-        int qty = getInt(ship.cargo[selection - 1]->quantity);
-        transactSale(selection, qty);
+        int selection = 0;
+        do {
+            printSaleMenu("Select an item to sell.");
+            selection = getInt(ship.cargo.size(), 0);
+            if(selection) {
+                printSaleMenu("Sell how many " + ship.cargo[selection - 1]->name + "?");
+                int qty = getInt(ship.cargo[selection - 1]->quantity, 0);
+                if(qty)
+                    transactSale(selection, qty);
+            }
+        } while(selection);
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -148,16 +148,10 @@ void Sector::gameLoop() {
     int selection = getInt(5);
     switch (selection) {
         case 1: 
-            Dialog::clear();
-            while(true) {
-                station.purchaseGoods();
-                station.printWares(station.ship.cargo);
-            }
+            station.purchaseGoods();
             break;
         case 2:
-            while(true) {
-                station.sellGoods();
-            }
+            station.sellGoods();
             break;
         case 4:
             Dialog::clear();
