@@ -8,6 +8,8 @@
 #include "goods.h"
 #include "dialog.h"
 #include "asciiArt.cpp"
+#include "weapon.h"
+#include "crewman.h"
 
 using namespace std;
 using namespace Jon;
@@ -25,7 +27,10 @@ public:
     int money = 1000;
     int engine = 40;
 
-    vector<Goods*> cargo = {new Goods("Pens", 90, 87)};
+    Weapon weapon;
+
+    vector<Crewman*> crew = {};
+    vector<Goods*> cargo = {};
 
     // ---------------------------------------------------------------------------------------------
 
@@ -81,6 +86,7 @@ public:
         this->availableCargoSpace = cargoCapacity;
         this->crewSize = ships[selection -1][2];
         this->money -= ships[selection - 1][3];
+        this->shipId = selection - 1;
 
         Dialog::clear();
 

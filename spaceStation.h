@@ -146,8 +146,11 @@ public:
                 break;
             }
         }
-        if(!ship.cargo[selection - 1]->quantity)
+        if(!ship.cargo[selection - 1]->quantity) {
+            delete ship.cargo[selection - 1];
+            ship.cargo[selection - 1] = NULL;
             ship.cargo.erase(ship.cargo.begin() + (selection -1));
+        }
 
         return sale;
     }
@@ -159,6 +162,9 @@ public:
         Dialog::centerText("<" + this->stationName + " Merchandise>\n");
         printWares(wares, true);
         Dialog::centerText("<Your Merchandise>");
+        ship.calculateAvailableCargoSpace();
+        Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
+                           "/" + to_string(ship.cargoCapacity));
         Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
         printWares(ship.cargo, false);
         Dialog::centerText(addedText);
@@ -181,7 +187,7 @@ public:
                 }
                 printPurchaseMenu("Buy how many " + wares[selection - 1]->name + "? (Max " + 
                                 to_string(limit) + ")");
-                int qty = getInt(wares[selection - 1]->quantity, 0);
+                int qty = getInt(limit, 0);
                 if(qty)
                     transactPurchase(selection, qty);
             }

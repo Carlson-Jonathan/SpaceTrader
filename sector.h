@@ -13,7 +13,7 @@ public:
     Sector() : station("Enceladus Station") {
         setMarker("E");
         populateStationSymbols();
-        setThisStationsSymbol("E");
+        setThisStationsNameAndSymbol("E");
         this->station.ship.setupShip();
         gameLoop();
     };
@@ -33,8 +33,8 @@ private:
         "|  *       +    (C)           .    |",
         "|                         *        |",
         "|   (T)       .                  . |",
-        "|        .                  (S)    |",
-        "| .                  +             |",
+        "|        .         (W)      (S)    |",
+        "| .                      +         |",
         "|     *     (P)               .    |",
         "|                 .       (L)      |",
         "|        .                         |",
@@ -59,27 +59,26 @@ private:
         "Gravity Hub",
         "Hyperion Market",
         "Rigel Exchange",
-        "Ursa Ultra"
+        "Ursa Ultra",
+        "Wesley Station"
     };
 
-    void           displayMap           ();
-    void           setMarker            (string station, bool erase = 0);
+    void displayMap();
+    void setMarker(string station, bool erase = 0);
     pair<int, int> getStationCoordinates(string station);
-    int            getDistance          (string station, string destination);
-    void           gameLoop             ();
-    void           stationSelector      ();
-    void           populateStationSymbols();
-    void           displayStationOptions();
-    void setThisStationsSymbol(string symbol);
+    int  getDistance(string station, string destination);
+    void gameLoop();
+    void stationSelector();
+    void populateStationSymbols();
+    void displayStationOptions();
+    void setThisStationsNameAndSymbol(string symbol);
 };
 
 // =================================================================================================
 
 void Sector::displayMap() {
     string mapTitle = "Current Location: " + station.stationName;
-    cout << Dialog::drawLine('=', 60) << endl;
     Dialog::centerText(mapTitle, 60);
-    cout << Dialog::drawLine('=', 60) << endl;
 
     for(auto i : sectorMap) {
         Dialog::centerText(i, 60);
@@ -164,7 +163,7 @@ void Sector::populateStationSymbols() {
 
 // -------------------------------------------------------------------------------------------------
 
-void Sector::setThisStationsSymbol(string symbol) {
+void Sector::setThisStationsNameAndSymbol(string symbol) {
     for(auto i : stations) {
         if(i[0] == symbol[0]) {
             this->station.stationName = i;
@@ -194,25 +193,20 @@ void Sector::displayStationOptions() {
 // -------------------------------------------------------------------------------------------------
 
 void Sector::stationSelector() {
-    bool confirmed = false;
-    do {
-        Dialog::clear();
-        displayMap();
-        Dialog::centerText("Select Next Destination\n");
-        displayStationOptions();
-        Dialog::centerText("[X] to confirm selection.");
+    Dialog::clear();
+    displayMap();
+    Dialog::centerText("Select Next Destination\n");
+    displayStationOptions();
 
-        string selection = charToString(getChar(allStationSymbols + "x" + "X"));
+    string selection = charToString(getChar(allStationSymbols));
 
-        if(selection == "X" || selection == "x")
-            confirmed = true;
-        else {
-            setMarker(this->station.stationSymbol, 1); // Erase current station marker
-            setMarker(selection); 
-            setThisStationsSymbol(selection);
-        }
-
-    } while(!confirmed);
+    if(selection != station.stationName) {
+        setMarker(this->station.stationSymbol, 1); // Erase current station marker
+        setMarker(selection); 
+        setThisStationsNameAndSymbol(selection);
+        station.randomizeMerchAttr(0);
+        station.randomizeMerchAttr(1);
+    }
 }
 
 // -------------------------------------------------------------------------------------------------
