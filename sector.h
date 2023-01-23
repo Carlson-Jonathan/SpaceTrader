@@ -83,6 +83,7 @@ void Sector::displayMap() {
     for(auto i : sectorMap) {
         Dialog::centerText(i, 60);
     }
+    cout << endl;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -194,9 +195,10 @@ void Sector::displayStationOptions() {
 
 void Sector::stationSelector() {
     Dialog::clear();
+    cout << Dialog::drawLine('=', 60) << endl;
     displayMap();
-    Dialog::centerText("Select Next Destination\n");
     displayStationOptions();
+    Dialog::drawBottomBorder("Select Next Destination");
 
     string selection = charToString(getChar(allStationSymbols));
 

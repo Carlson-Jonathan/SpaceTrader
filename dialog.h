@@ -65,12 +65,35 @@ namespace Dialog {
 
     // ---------------------------------------------------------------------------------------------
 
+    void drawBottomBorder(string prompt = "Make Your Selection") {
+        cout << drawLine('=', 60);
+        centerText(prompt);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     vector<string> vectorIntsToStrings(vector<int> content) {
         vector<string> fContent = {};
         for(auto i : content) {
             fContent.push_back(to_string(i));
         }
         return fContent;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void centerAsciiArt(string art) {
+        vector<string> splArt = splitString(art);
+        string margin = "";
+        int marginSize = (60 - splArt[1].length()) / 2;
+        while(marginSize--) {
+            margin += " ";
+        }
+        cout << drawLine('=', 60) << endl;
+        for(auto & i : splArt) {
+            i = margin + i + margin;
+            cout << i << endl;
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -256,13 +279,9 @@ namespace Dialog {
         string introText = "Story exposition goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla eu sem viverra tincidunt. Vivamus mollis turpis a elit porttitor, nec aliquet purus porta. Nullam vestibulum elit ut mi sollicitudin scelerisque. Donec sit amet consequat magna, vitae fermentum sem. In scelerisque dolor a arcu tempus pharetra. Nam scelerisque nisl nec semper ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras ut nunc eu lacus sagittis ullamcorper non sit amet metus. Nullam interdum dui vitae tincidunt viverra. Donec pharetra feugiat congue. End of string.";
         string title = "Welcome to Enceladus Station!";
         string content = introText;
+
         clear();
-
-        cout << drawLine('=', 60) << endl;
-        AsciiArt::saturn2();
-        cout << drawLine('=', 60) << endl;
-
-        cout << endl;
+        centerAsciiArt(AsciiArt::spock);
         generateDialogBox(content);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);

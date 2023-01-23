@@ -88,6 +88,7 @@ public:
             vector<string> line = {name, to_string(price), to_string(qty)};
             content.push_back(line);
         }
+        
         Dialog::generateDialogBox(title, content, enumerated);
     }    
 
@@ -159,6 +160,7 @@ public:
 
     void printPurchaseMenu(string addedText) {
         Dialog::clear();
+        cout << Dialog::drawLine('=', 60) << endl;
         Dialog::centerText("<" + this->stationName + " Merchandise>\n");
         printWares(wares, true);
         Dialog::centerText("<Your Merchandise>");
@@ -167,8 +169,9 @@ public:
                            "/" + to_string(ship.cargoCapacity));
         Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
         printWares(ship.cargo, false);
-        Dialog::centerText(addedText);
+        Dialog::drawBottomBorder(addedText);
         Dialog::centerText("0.) Cancel");
+        Dialog::drawLine('=', 60);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -176,7 +179,7 @@ public:
     void purchaseGoods() {
         int selection = 0;
         do {
-            printPurchaseMenu("Select an item to buy.");
+            printPurchaseMenu("Select An Item To Buy");
             selection = getInt(wares.size(), 0);
             if(selection) {
                 int limit = getPurchasingLimit(selection);
@@ -198,12 +201,15 @@ public:
 
     void printSaleMenu(string addedText) {
         Dialog::clear();
+        cout << Dialog::drawLine('=', 60) << endl;        
         Dialog::centerText("<" + this->stationName + " Merchandise>\n");
         printWares(wares, false);
         Dialog::centerText("<Your Merchandise>");
+        Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
+                           "/" + to_string(ship.cargoCapacity));        
         Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
         printWares(ship.cargo);
-        Dialog::centerText(addedText);
+        Dialog::drawBottomBorder(addedText);
         Dialog::centerText("0.) Cancel");
     }
 
@@ -244,8 +250,9 @@ public:
         bool onStation = true;
         do {
             Dialog::clear();
-            AsciiArt::saturn2();
+            Dialog::centerAsciiArt(AsciiArt::saturn);
             printStationMenu();
+            Dialog::drawBottomBorder();
             int selection = getInt(5);
             switch(selection) {
                 case 1: 
@@ -256,7 +263,7 @@ public:
                     break;
                 case 4:
                     Dialog::clear();
-                    cout << AsciiArt::asciiShips[ship.shipId] << endl;
+                    Dialog::centerAsciiArt(AsciiArt::asciiShips[ship.shipId]);
                     ship.displayShipStatus();
                     Dialog::pause();
                     break;   

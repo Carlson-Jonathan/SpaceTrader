@@ -70,14 +70,14 @@ public:
         string title = "Cargo";
         Dialog::generateDialogBox(this->name, content);
         Dialog::generateDialogBox(title, formatCargoForPrinting());
+        cout << Dialog::drawLine('=', 60) << endl;
     }
 
     // ---------------------------------------------------------------------------------------------
 
     void setupShip() {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;
-        AsciiArt::saturn2();
+        Dialog::centerAsciiArt(AsciiArt::saturn);
 
         int selection = shipSelector();
         this->name = shipNames[selection - 1];
@@ -89,12 +89,10 @@ public:
         this->shipId = selection - 1;
 
         Dialog::clear();
-
-        Dialog::centerText("Ship Purchased!", 60);
-        cout << AsciiArt::asciiShips[this->shipId] << endl;
+        Dialog::centerAsciiArt(AsciiArt::asciiShips[this->shipId]);
         this->shipId = selection - 1;
+        Dialog::centerText("Ship Purchased:\n");
         displayShipStatus();
-
         Dialog::pause();
         Dialog::clear();
     }
@@ -103,7 +101,8 @@ public:
 
 private:
 
-    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier", "Hornet"};
+    vector<string> shipNames = {"Kestrel", "Falcon", "War Hammer", "Galleon", "Rapier", "Hornet", 
+                                "Juggernaut", "Maurader", "Privateer", "Nautilus"};
 
     vector<vector<int>> ships = {
     //   Hull, cargo, crew, price, eng
@@ -112,7 +111,11 @@ private:
         { 150,    55,    8,   850,  50},
         {  75,   100,    5,   675,  70},
         { 250,     0,   20,   600,  90},
-        {  15,     5,    3,   150,  20}
+        {  15,     5,    3,   150,  20},
+        { 100,   100,  100,   100, 100},
+        { 100,   100,  100,   100, 100},
+        { 100,   100,  100,   100, 100},
+        { 100,   100,  100,   100, 100}
     };
 
 
@@ -141,6 +144,7 @@ private:
         Dialog::centerText(finances, 60);
         Dialog::generateDialogBox(title, content, true);
         cout << Dialog::drawLine('=', 60) << endl;
+        Dialog::centerText("Make Your Selection");
         int selection = getInt(ships.size());
         return selection;
     }
