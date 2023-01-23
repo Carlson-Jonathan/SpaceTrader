@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include "ship.h"
 #include "goods.h"
 #include "dialog.h"
@@ -20,72 +21,263 @@ public:
     SpaceStation(string stationName) {
         this->stationName = stationName;
         this->stationSymbol = charToString(stationName[0]);
+        populateWares();
+        randomizeMerchAttr(0);
+        randomizeMerchAttr(1);
     }
 
     string stationName = "";
     string stationSymbol = "";
     Ship ship;
 
+    vector<Goods*> wares = {};
+    vector<string> merchandiseList = {
+        "Pencils",    
+        "Pens",      
+        "Forks",      
+        "Diapers",    
+        "Fingers",   
+        "Turkey",      
+        "Clowns",      
+        "Rainbows",   
+        "Wrachets",   
+        "Icecream",   
+        "Snot drip",  
+        "Hair plug",  
+        "Dandilion",   
+        "Shovels",     
+        "Cat nip",     
+        "Nick nack",   
+        "French fry",   
+        "Fire ladder",  
+        "Jumping Jack", 
+        "Fire hose",     
+        "Acorns",
+        "Telescope",
+        "Fluffy Plush"      
+    };
+
     // ---------------------------------------------------------------------------------------------
 
-    void printWares() {
-        
-        cout << setw(17) << "Name" << setw(7) << "Price" 
-            << setw(10) << "Quantity" << "\n----------------------------------\n";
-        
+    void randomizeMerchAttr(int attribute) {
         for(int i = 0; i < wares.size(); i++) {
-            cout << setw(2) << (i + 1) << ".) ";
-            wares[i]->printGoodsData();
+            if(attribute == 0 )
+                wares[i]->price = generateRandomNumber(100);
+            else if(attribute == 1)
+                wares[i]->quantity = generateRandomNumber(100);
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void populateWares() {
+        for(auto i : merchandiseList) {
+            wares.push_back(new Goods(i, 0, 0));
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printWares(const vector<Goods*> & goods, bool enumerated = true) {
+        vector<string> title = {"Name", "Price", "Quantity"};
+        vector<vector<string>> content = {};
+        for(int i = 0; i < goods.size(); i++) {
+            string name = goods[i]->name;
+            int price = goods[i]->price;
+            int qty = goods[i]->quantity;
+            vector<string> line = {name, to_string(price), to_string(qty)};
+            content.push_back(line);
+        }
+        
+        Dialog::generateDialogBox(title, content, enumerated);
     }    
 
     // ---------------------------------------------------------------------------------------------
 
-    void interactWithStation() {
-        Dialog::screenBorder();
-        AsciiArt::saturn2();
-
-        vector<string> title = {this->stationName};
-        vector<vector<string>> content = {
-            {"Buy trade cargo"},
-            {"Sell trade cargo"},
-            {"Hire crew"},
-            {"Upgrade ship"},
-            {"Depart for next station"}
-        };
-
-        Dialog::generateDialogTerminal(title, content, 27, true);
-        Dialog::screenBorder();
+    int getPurchasingLimit(int selection) {
+        int supplyLimit = this->wares[selection - 1]->quantity;
+        int affordabaleLimit = ship.money / this->wares[selection - 1]->price;
+        int availableSpace = ship.availableCargoSpace;
+        int limits[] = {supplyLimit, affordabaleLimit, availableSpace};
+        int* limit = min_element(limits, limits + 3);
+        return *limit;
     }
 
+    // ---------------------------------------------------------------------------------------------
+
+    void transactPurchase(int selection, int qty) {
+        // If type of goods is already on ship, add to it. Otherwise make a new one.
+        if(!ship.cargo.size())
+            ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+                                               wares[selection - 1]->price, qty));
+        else {
+            // Search for item and increment
+            bool itemExists = false;
+            for(int i = 0; i < ship.cargo.size(); i++) {
+                if(ship.cargo[i]->name == wares[selection - 1]->name) {
+                    ship.cargo[i]->quantity += qty;  
+                    itemExists = true;                      
+                    break;
+                }        
+            }
+            if(!itemExists) {
+                ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+                                            wares[selection - 1]->price, qty));
+            }
+        }
+        wares[selection - 1]->quantity -= qty;
+        ship.money -= this->wares[selection - 1]->price * qty;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    string transactSale(int selection, int qty) {
+        int price = 0;
+        string sale = "";
+        for(int i = 0; i < wares.size(); i++) {
+            if(ship.cargo[selection - 1]->name == wares[i]->name) {
+                sale = "Selling " + to_string(qty) + " " + wares[i]->name +
+                        " @ $" + to_string(wares[i]->price) + "ea. (+$" + 
+                        to_string(wares[i]->price * qty) + ")";
+                int price = wares[i]->price;
+                this->ship.cargo[selection - 1]->quantity -= qty;
+                this->wares[i]->quantity += qty;
+                this->ship.money += (price * qty);
+                this->ship.availableCargoSpace += qty;  
+                break;
+            }
+        }
+        if(!ship.cargo[selection - 1]->quantity) {
+            delete ship.cargo[selection - 1];
+            ship.cargo[selection - 1] = NULL;
+            ship.cargo.erase(ship.cargo.begin() + (selection -1));
+        }
+
+        return sale;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printPurchaseMenu(string addedText) {
+        Dialog::clear();
+        cout << Dialog::drawLine('=', 60) << endl;
+        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        printWares(wares, true);
+        Dialog::centerText("<Your Merchandise>");
+        ship.calculateAvailableCargoSpace();
+        Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
+                           "/" + to_string(ship.cargoCapacity));
+        Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
+        printWares(ship.cargo, false);
+        Dialog::drawBottomBorder(addedText);
+        Dialog::centerText("0.) Cancel");
+        Dialog::drawLine('=', 60);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void purchaseGoods() {
+        int selection = 0;
+        do {
+            printPurchaseMenu("Select An Item To Buy");
+            selection = getInt(wares.size(), 0);
+            if(selection) {
+                int limit = getPurchasingLimit(selection);
+                if(!limit) {
+                    Dialog::centerText("You cannot buy that item.");
+                    Dialog::pause();
+                    return;
+                }
+                printPurchaseMenu("Buy how many " + wares[selection - 1]->name + "? (Max " + 
+                                to_string(limit) + ")");
+                int qty = getInt(limit, 0);
+                if(qty)
+                    transactPurchase(selection, qty);
+            }
+        } while(selection);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printSaleMenu(string addedText) {
+        Dialog::clear();
+        cout << Dialog::drawLine('=', 60) << endl;        
+        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        printWares(wares, false);
+        Dialog::centerText("<Your Merchandise>");
+        Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
+                           "/" + to_string(ship.cargoCapacity));        
+        Dialog::centerText("Credits: $" + to_string(ship.money) + "\n");
+        printWares(ship.cargo);
+        Dialog::drawBottomBorder(addedText);
+        Dialog::centerText("0.) Cancel");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void sellGoods() {
+        int selection = 0;
+        do {
+            printSaleMenu("Select an item to sell.");
+            selection = getInt(ship.cargo.size(), 0);
+            if(selection) {
+                printSaleMenu("Sell how many " + ship.cargo[selection - 1]->name + "?");
+                int qty = getInt(ship.cargo[selection - 1]->quantity, 0);
+                if(qty)
+                    transactSale(selection, qty);
+            }
+        } while(selection);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void printStationMenu() {
+        string title = this->stationName;
+        vector<string> content = {
+            "Buy trade cargo",
+            "Sell trade cargo",
+            "Hire crew",
+            "View Ship Info",
+            "Leave Station"
+        };
+
+        Dialog::generateDialogBox(this->stationName, content, true);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void interactWithStation() {
+        bool onStation = true;
+        do {
+            Dialog::clear();
+            Dialog::centerAsciiArt(AsciiArt::saturn);
+            printStationMenu();
+            Dialog::drawBottomBorder();
+            int selection = getInt(5);
+            switch(selection) {
+                case 1: 
+                    purchaseGoods();
+                    break;
+                case 2:
+                    sellGoods();
+                    break;
+                case 4:
+                    Dialog::clear();
+                    Dialog::centerAsciiArt(AsciiArt::asciiShips[ship.shipId]);
+                    ship.displayShipStatus();
+                    Dialog::pause();
+                    break;   
+                case 5:
+                    onStation = false;
+                    break; 
+                default:
+                    break;
+            }     
+        } while(onStation);   
+    }
+
+
 // =================================================================================================
-
-private:
-
-    vector<Goods*> wares = {
-        new Goods("Pencils",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Pens",         generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Straws",       generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Forks",        generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Diapers",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Fingers",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Turkey",       generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Clowns",       generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Rainbows",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Wrachets",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Icecream",     generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Snot drip",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Hair plug",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Dandilion",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Shovels",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Cat nip",      generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Nick nack",    generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("French fry",   generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Fire ladder",  generateRandomNumber(100), generateRandomNumber(100)),
-        new Goods("Jumping Jack", generateRandomNumber(100), generateRandomNumber(100)),  
-        new Goods("Fire hose",    generateRandomNumber(100), generateRandomNumber(100)),  
-        new Goods("Acorns",       generateRandomNumber(100), generateRandomNumber(100))
-    };
 };
 
 #endif // SPACESTATION_H
