@@ -12,7 +12,7 @@
 #include "miscellaneous.cpp"
 
 using namespace std;
-using namespace Jon;
+using namespace Misc;
 
 class SpaceStation { 
 public:

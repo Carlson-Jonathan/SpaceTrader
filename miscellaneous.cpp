@@ -1,11 +1,12 @@
-#ifndef JON
-#define JON
+#ifndef MISC_H
+#define MISC_H
 
 #include <iostream>
 #include <vector>
+#include <dirent.h>
 using namespace std;
 
-namespace Jon {
+namespace Misc {
 
     int generateRandomNumber(int max = 10, int min = 1) {
         return (rand() % (max + 1 - min) + (min - 1)) + 1;
@@ -84,6 +85,24 @@ namespace Jon {
 
     // ---------------------------------------------------------------------------------------------
 
+    vector<string> getAllFileNamesFromDirectory(const char *path) {
+
+        struct dirent *entry;
+        vector<string> files;
+        DIR *directory = opendir(path);
+
+        if (directory != NULL) {
+            while((entry = readdir(directory)) != NULL) {
+                string file = entry->d_name;
+
+                if(file != "." && file != "..")
+                    files.push_back(file);
+            }
+        }
+
+        closedir(directory);
+        return files;
+    }
 }
 
-#endif // JON
+#endif // MISC

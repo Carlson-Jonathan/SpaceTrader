@@ -1,3 +1,5 @@
 *.out
 .fuse*
 .vscode*
+*.exe
+*.zip
