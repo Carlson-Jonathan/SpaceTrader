@@ -28,7 +28,9 @@ public:
 
     string stationName = "";
     string stationSymbol = "";
+    int stationId = 0;
     Ship ship;
+    Art art;
 
     vector<Goods*> wares = {};
     vector<string> merchandiseList = {
@@ -250,7 +252,7 @@ public:
         bool onStation = true;
         do {
             Dialog::clear();
-            Dialog::centerAsciiArt(AsciiArt::saturn);
+            art.displayAsciiArt(art.stations[stationId]);
             printStationMenu();
             Dialog::drawBottomBorder();
             int selection = getInt(5);

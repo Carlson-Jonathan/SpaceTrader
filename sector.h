@@ -16,6 +16,7 @@ public:
         setThisStationsNameAndSymbol("E");
         this->station.ship.setupShip();
         gameLoop();
+        sort(stations.begin(), stations.end());
     };
 
 // -------------------------------------------------------------------------------------------------
@@ -27,40 +28,36 @@ private:
 
     vector<string> sectorMap = {" ",
         "0----------------------------------0",
-        "|          *       .            .  |",
-        "| .   (E)    .          .          |",
+        "|   *               .           .  |",
+        "|       (E)    .         .         |",
         "|                    .       (O)   |",
-        "|  *       +    (C)           .    |",
-        "|                         *        |",
+        "|  .       +                       |",
+        "|                 (C)     *        |",
         "|   (T)       .                  . |",
-        "|        .         (W)      (S)    |",
-        "| .                      +         |",
-        "|     *     (P)               .    |",
-        "|                 .       (L)      |",
+        "|                                  |",
+        "| .        .       .     +         |",
+        "|     *                     (S)    |",
+        "|              (B)   .             |",
         "|        .                         |",
-        "|  .           (B)          .      |",
-        "|    (G)              +         .  |",
-        "|             .                    |",
-        "|                            (H)   |",
-        "|  *    (R)       *   (U)  +       |",
-        "|           .       .              |",
+        "|  (P)                      .      |",
+        "|              .      +         .  |",
+        "|      +                           |",
+        "|                      (H)         |",
+        "|  *    (R)       *          +     |",
+        "|                     .            |",
         "0----------------------------------0"
     };    
 
     vector<string> stations = {
+        "Betelgeuse Way",
+        "Calypso Trade Center",
         "Enceladus Station",
-        "Centari Prime",
-        "Orion V",
-        "Terra Firma",
-        "Sagetarius IV",
-        "Polaris Nebula",
-        "Lightyear Gangway",
-        "Betelgeuse Post",
-        "Gravity Hub",
         "Hyperion Market",
+        "Orion Vendors",
+        "Proxima Central",
         "Rigel Exchange",
-        "Ursa Ultra",
-        "Wesley Station"
+        "Solaris III",
+        "Terrilius Auction"
     };
 
     void displayMap();
@@ -165,10 +162,11 @@ void Sector::populateStationSymbols() {
 // -------------------------------------------------------------------------------------------------
 
 void Sector::setThisStationsNameAndSymbol(string symbol) {
-    for(auto i : stations) {
-        if(i[0] == symbol[0]) {
-            this->station.stationName = i;
-            this->station.stationSymbol = charToString(i[0]);
+    for(int i = 0; i < stations.size(); i++) {
+        if(stations[i][0] == symbol[0]) {
+            this->station.stationId = i;
+            this->station.stationName = stations[i];
+            this->station.stationSymbol = charToString(stations[i][0]);
             break;
         }
     }

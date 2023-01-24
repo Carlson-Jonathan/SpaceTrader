@@ -68,6 +68,7 @@ namespace Dialog {
 
     void drawBottomBorder(string prompt = "Make Your Selection") {
         cout << drawLine('=', 60);
+        cout << "\n";
         centerText(prompt);
     }
 
