@@ -7,16 +7,19 @@
 #include "miscellaneous.cpp"
 #include "goods.h"
 #include "dialog.h"
-#include "asciiArt.cpp"
+// #include "asciiArt.cpp"
 #include "weapon.h"
 #include "crewman.h"
+#include "art.h"
 
 using namespace std;
-using namespace Jon;
+using namespace Misc;
 
 class Ship {
 public:
-    Ship() {}
+    Ship() {
+        sort(shipNames.begin(), shipNames.end());
+    }
 
     string name = "";
     int shipId = 0;
@@ -28,6 +31,7 @@ public:
     int engine = 40;
 
     Weapon weapon;
+    Art art;
 
     vector<Crewman*> crew = {};
     vector<Goods*> cargo = {};
@@ -89,8 +93,9 @@ public:
         this->shipId = selection - 1;
 
         Dialog::clear();
-        Dialog::centerAsciiArt(AsciiArt::asciiShips[this->shipId]);
+        
         this->shipId = selection - 1;
+        art.displayAsciiArt(art.ships[this->shipId]);
         Dialog::centerText("Ship Purchased:\n");
         displayShipStatus();
         Dialog::pause();
@@ -101,8 +106,8 @@ public:
 
 private:
 
-    vector<string> shipNames = {"Kestrel", "Falcon", "War Hammer", "Galleon", "Rapier", "Hornet", 
-                                "Juggernaut", "Maurader", "Privateer", "Nautilus"};
+    vector<string> shipNames = {"Kestrel", "Falcon", "Stingray", "Galleon", "Rapier", "Raptor", 
+                                "Juggernaut", "Maurader", "Nautilus", "War Hammer"};
 
     vector<vector<int>> ships = {
     //   Hull, cargo, crew, price, eng

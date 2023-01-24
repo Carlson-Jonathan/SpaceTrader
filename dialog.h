@@ -5,8 +5,9 @@
 #include <iomanip>
 #include "miscellaneous.cpp"
 #include "asciiArt.cpp"
+#include "art.h"
 using namespace std;
-using namespace Jon;
+using namespace Misc;
 
 namespace Dialog {
 
@@ -281,7 +282,8 @@ namespace Dialog {
         string content = introText;
 
         clear();
-        centerAsciiArt(AsciiArt::spock);
+        Art art;
+        art.displayAsciiArt(art.crewmen[0]);
         generateDialogBox(content);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);
