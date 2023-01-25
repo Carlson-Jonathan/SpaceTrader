@@ -10,13 +10,13 @@ using namespace std;
 class Sector {
 public:
 
-    Sector() : station("Enceladus Station") {
-        setMarker("E");
+    Sector() : station("Calypso Station") {
+        setMarker("C");
         populateStationSymbols();
-        setThisStationsNameAndSymbol("E");
+        setThisStationsNameAndSymbol("C");
         this->station.ship.setupShip();
-        gameLoop();
         sort(stations.begin(), stations.end());
+        gameLoop();
     };
 
 // -------------------------------------------------------------------------------------------------
@@ -49,15 +49,15 @@ private:
     };    
 
     vector<string> stations = {
-        "Betelgeuse Way",
-        "Calypso Trade Center",
-        "Enceladus Station",
+        "Betelgeuse Waypoint",
+        "Calypso Station",
+        "Enceladus Trade",
         "Hyperion Market",
         "Orion Vendors",
         "Proxima Central",
         "Rigel Exchange",
         "Solaris III",
-        "Terrilius Auction"
+        "Terrilius Oasis"
     };
 
     void displayMap();
@@ -80,7 +80,7 @@ void Sector::displayMap() {
     for(auto i : sectorMap) {
         Dialog::centerText(i, 60);
     }
-    cout << endl;
+    cout << "\n";
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ void Sector::displayStationOptions() {
 
 void Sector::stationSelector() {
     Dialog::clear();
-    cout << Dialog::drawLine('=', 60) << endl;
+    cout << Dialog::drawLine('=', 60) << "\n";
     displayMap();
     displayStationOptions();
     Dialog::drawBottomBorder("Select Next Destination");

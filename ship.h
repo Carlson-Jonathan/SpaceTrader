@@ -74,14 +74,15 @@ public:
         string title = "Cargo";
         Dialog::generateDialogBox(this->name, content);
         Dialog::generateDialogBox(title, formatCargoForPrinting());
-        cout << Dialog::drawLine('=', 60) << endl;
+        cout << Dialog::drawLine('=', 60) << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
 
     void setupShip() {
         Dialog::clear();
-        Dialog::centerAsciiArt(AsciiArt::saturn);
+        cout << Dialog::drawLine('=', 60) << endl;
+        art.displayAsciiArt(art.misc[0]);
 
         int selection = shipSelector();
         this->name = shipNames[selection - 1];
@@ -148,7 +149,7 @@ private:
         string finances = "Credits: $" + to_string(money) + "\n";
         Dialog::centerText(finances, 60);
         Dialog::generateDialogBox(title, content, true);
-        cout << Dialog::drawLine('=', 60) << endl;
+        cout << Dialog::drawLine('=', 60) << "\n";
         Dialog::centerText("Make Your Selection");
         int selection = getInt(ships.size());
         return selection;

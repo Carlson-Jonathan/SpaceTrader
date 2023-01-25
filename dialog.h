@@ -38,7 +38,7 @@ namespace Dialog {
     // ---------------------------------------------------------------------------------------------
 
     void centerText(string text, int columnWidth = 60) {
-        cout << setw(columnWidth / 2 + text.length() / 2) << right << text << endl;
+        cout << setw(columnWidth / 2 + text.length() / 2) << right << text << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -91,10 +91,10 @@ namespace Dialog {
         while(marginSize--) {
             margin += " ";
         }
-        cout << drawLine('=', 60) << endl;
+        cout << drawLine('=', 60) << "\n";
         for(auto & i : splArt) {
             i = margin + i + margin;
-            cout << i << endl;
+            cout << i << "\n";
         }
     }
 
@@ -182,19 +182,19 @@ namespace Dialog {
         for(int i = 1; i < title.size(); i++) {
             cout << right << setw(columnWidths[i]) << title[i] << "  ";
         }
-        cout << endl;
+        cout << "\n";
     }  
 
     // ---------------------------------------------------------------------------------------------
 
     void debugDialogBox(int boxWidth, int indentColumn, vector<int> columnWidths) {
-        cout << "Box width: " << boxWidth << endl;
-        cout << "Indent Column: " << indentColumn << endl;
+        cout << "Box width: " << boxWidth << "\n";
+        cout << "Indent Column: " << indentColumn << "\n";
         cout << "columnWidths: {";
         for(auto i : columnWidths) {
             cout << i << ", "; 
         }
-        cout << "}" << endl;
+        cout << "}" << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -218,10 +218,10 @@ namespace Dialog {
             for(int j = 1; j < content[i].size(); j++) {
                 cout << setw(columnWidths[j]) << content[i][j] << "  ";
             }
-            cout << endl;
+            cout << "\n";
         }
         centerText(drawLine('-', boxWidth), screenWidth);
-        cout << endl;
+        cout << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -242,10 +242,10 @@ namespace Dialog {
             for(int j = 1; j < content[i].size(); j++) {
                 cout << setw(columnWidths[j]) << content[i][j] << "  ";
             }
-            cout << endl;
+            cout << "\n";
         }
         centerText(drawLine('-', boxWidth), screenWidth);
-        cout << endl;
+        cout << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -261,34 +261,34 @@ namespace Dialog {
         for(int i = 0; i < content.size(); i++) {
             cout << setw(indentColumn) << " ";
             if(enumerated) cout << setw(expand) << right << (i + 1) << left << ".) ";
-            cout << setw(columnWidth) << left << content[i] << right << endl;
+            cout << setw(columnWidth) << left << content[i] << right << "\n";
         }
         centerText(drawLine('-', boxWidth), screenWidth);
-        cout << endl;
+        cout << "\n";
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    void generateDialogBox(string content, int dialogBoxWidth = 45) {
+    void generateDialogBox(string title, string content, int dialogBoxWidth = 45) {
         content = wrapText(content, dialogBoxWidth);
         vector<string> fContent = splitString(content);
-        generateDialogBox("", fContent);
+        generateDialogBox(title, fContent);
     }   
 
     // ---------------------------------------------------------------------------------------------
 
     void newGameIntro() {
-        string introText = "Story exposition goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla eu sem viverra tincidunt. Vivamus mollis turpis a elit porttitor, nec aliquet purus porta. Nullam vestibulum elit ut mi sollicitudin scelerisque. Donec sit amet consequat magna, vitae fermentum sem. In scelerisque dolor a arcu tempus pharetra. Nam scelerisque nisl nec semper ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras ut nunc eu lacus sagittis ullamcorper non sit amet metus. Nullam interdum dui vitae tincidunt viverra. Donec pharetra feugiat congue. End of string.";
-        string title = "Welcome to Enceladus Station!";
+        string introText = "Story exposition goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla eu sem viverra tincidunt. Vivamus mollis turpis a elit porttitor, nec aliquet purus porta. Nullam vestibulum elit ut mi sollicitudin scelerisque. Donec sit amet consequat magna, vitae fermentum sem. In scelerisque dolor a arcu tempus pharetra. Nam scelerisque nisl nec semper ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. End of string.";
+        string title = "Welcome to Calypso Station!";
         string content = introText;
 
-        clear();
         Art art;
-        art.displayAsciiArt(art.crewmen[0]);
-        generateDialogBox(content);
+        clear();
+        art.displayAsciiArt(art.aliens[0]);
+        generateDialogBox(title, content);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);
-        cout << drawLine('=', 60) << endl;
+        cout << drawLine('=', 60) << "\n";
         pause();
         clear();
     }

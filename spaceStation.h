@@ -162,8 +162,9 @@ public:
 
     void printPurchaseMenu(string addedText) {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;
-        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        cout << Dialog::drawLine('=', 60) << "\n";
+        Dialog::centerText(this->stationName);
+        cout << "\n";
         printWares(wares, true);
         Dialog::centerText("<Your Merchandise>");
         ship.calculateAvailableCargoSpace();
@@ -203,8 +204,9 @@ public:
 
     void printSaleMenu(string addedText) {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;        
-        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        cout << Dialog::drawLine('=', 60) << "\n";        
+        Dialog::centerText(this->stationName);
+        cout << "\n";
         printWares(wares, false);
         Dialog::centerText("<Your Merchandise>");
         Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
@@ -252,6 +254,7 @@ public:
         bool onStation = true;
         do {
             Dialog::clear();
+            cout << Dialog::drawLine('=', 60) << endl;
             art.displayAsciiArt(art.stations[stationId]);
             printStationMenu();
             Dialog::drawBottomBorder();
