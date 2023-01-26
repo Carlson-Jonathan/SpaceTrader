@@ -16,6 +16,7 @@ public:
        populateListFromFile("asciiArt/planets/", planets);
        populateListFromFile("asciiArt/ships/", ships);
        populateListFromFile("asciiArt/stations/", stations);
+       populateListFromFile("asciiArt/misc/", misc);
     }
 
     vector<vector<string>> ships    = {};
@@ -23,6 +24,7 @@ public:
     vector<vector<string>> aliens   = {};
     vector<vector<string>> stations = {};
     vector<vector<string>> planets  = {}; 
+    vector<vector<string>> misc     = {};
 
     // ---------------------------------------------------------------------------------------------
 

@@ -5,16 +5,18 @@
 #include <math.h>
 #include <map>
 #include "miscellaneous.cpp"
+#include "events.h"
 using namespace std;
 
 class Sector {
 public:
 
-    Sector() : station("Enceladus Station") {
-        setMarker("E");
+    Sector() : station("Calypso Station") {
+        setMarker("C");
         populateStationSymbols();
-        setThisStationsNameAndSymbol("E");
+        setThisStationsNameAndSymbol("C");
         this->station.ship.setupShip();
+        sort(stations.begin(), stations.end());
         gameLoop();
     };
 
@@ -22,45 +24,42 @@ public:
 
 private:
 
+    Events events;
     SpaceStation station;
     string allStationSymbols = "";
 
     vector<string> sectorMap = {" ",
         "0----------------------------------0",
-        "|          *       .            .  |",
-        "| .   (E)    .          .          |",
+        "|   *               .           .  |",
+        "|       (E)    .         .         |",
         "|                    .       (O)   |",
-        "|  *       +    (C)           .    |",
-        "|                         *        |",
+        "|  .       +                       |",
+        "|                 (C)     *        |",
         "|   (T)       .                  . |",
-        "|        .         (W)      (S)    |",
-        "| .                      +         |",
-        "|     *     (P)               .    |",
-        "|                 .       (L)      |",
+        "|                                  |",
+        "| .        .       .     +         |",
+        "|     *                     (S)    |",
+        "|              (B)   .             |",
         "|        .                         |",
-        "|  .           (B)          .      |",
-        "|    (G)              +         .  |",
-        "|             .                    |",
-        "|                            (H)   |",
-        "|  *    (R)       *   (U)  +       |",
-        "|           .       .              |",
+        "|  (P)                      .      |",
+        "|              .      +         .  |",
+        "|      +                           |",
+        "|                      (H)         |",
+        "|  *    (R)       *          +     |",
+        "|                     .            |",
         "0----------------------------------0"
     };    
 
     vector<string> stations = {
-        "Enceladus Station",
-        "Centari Prime",
-        "Orion V",
-        "Terra Firma",
-        "Sagetarius IV",
-        "Polaris Nebula",
-        "Lightyear Gangway",
-        "Betelgeuse Post",
-        "Gravity Hub",
+        "Betelgeuse Waypoint",
+        "Calypso Station",
+        "Enceladus Trade",
         "Hyperion Market",
+        "Orion Vendors",
+        "Proxima Central",
         "Rigel Exchange",
-        "Ursa Ultra",
-        "Wesley Station"
+        "Solaris III",
+        "Terrilius Oasis"
     };
 
     void displayMap();
@@ -68,10 +67,12 @@ private:
     pair<int, int> getStationCoordinates(string station);
     int  getDistance(string station, string destination);
     void gameLoop();
-    void stationSelector();
+    string stationSelector();
     void populateStationSymbols();
     void displayStationOptions();
     void setThisStationsNameAndSymbol(string symbol);
+    void setNewStation(string symbol);
+    string getStationNameFromSymbol(string symbol);
 };
 
 // =================================================================================================
@@ -83,7 +84,7 @@ void Sector::displayMap() {
     for(auto i : sectorMap) {
         Dialog::centerText(i, 60);
     }
-    cout << endl;
+    cout << "\n";
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -144,15 +145,6 @@ int Sector::getDistance(string station, string destination) {
     return distance;
 }
 
-// -------------------------------------------------------------------------------------------------
-
-void Sector::gameLoop() {
-    bool gameover = false;
-    do {
-        station.interactWithStation();
-        stationSelector();
-    } while (!gameover);
-}
 
 // -------------------------------------------------------------------------------------------------
 
@@ -164,11 +156,23 @@ void Sector::populateStationSymbols() {
 
 // -------------------------------------------------------------------------------------------------
 
+string Sector::getStationNameFromSymbol(string symbol) {
+    string name = "";
+    for(int i = 0; i < stations.size(); i++) {
+        if(stations[i][0] == symbol[0]) 
+            name = stations[i];
+    }
+    return name;
+}
+
+// -------------------------------------------------------------------------------------------------
+
 void Sector::setThisStationsNameAndSymbol(string symbol) {
-    for(auto i : stations) {
-        if(i[0] == symbol[0]) {
-            this->station.stationName = i;
-            this->station.stationSymbol = charToString(i[0]);
+    for(int i = 0; i < stations.size(); i++) {
+        if(stations[i][0] == symbol[0]) {
+            this->station.stationId = i;
+            this->station.stationName = stations[i];
+            this->station.stationSymbol = Misc::charToString(stations[i][0]);
             break;
         }
     }
@@ -182,7 +186,7 @@ void Sector::displayStationOptions() {
     for(int i = 0; i < stations.size(); i++) {
         string dist = "";
         dist = to_string(getDistance(this->station.stationSymbol, 
-            charToString(this->allStationSymbols[i]))) + " LYs";
+            Misc::charToString(this->allStationSymbols[i]))) + " LYs";
         stationsList.push_back({stations[i], dist});
     }
 
@@ -193,25 +197,46 @@ void Sector::displayStationOptions() {
 
 // -------------------------------------------------------------------------------------------------
 
-void Sector::stationSelector() {
-    Dialog::clear();
-    cout << Dialog::drawLine('=', 60) << endl;
-    displayMap();
-    displayStationOptions();
-    Dialog::drawBottomBorder("Select Next Destination");
+void Sector::setNewStation(string symbol) {
+    if(symbol == station.stationSymbol) 
+        return;
 
-    string selection = charToString(getChar(allStationSymbols));
-
-    if(selection != station.stationName) {
-        setMarker(this->station.stationSymbol, 1); // Erase current station marker
-        setMarker(selection); 
-        setThisStationsNameAndSymbol(selection);
-        station.randomizeMerchAttr(0);
-        station.randomizeMerchAttr(1);
-    }
+    if(symbol == "O") 
+    
+    cout << "Erasing marker...\n";
+    setMarker(this->station.stationSymbol, 1); // Erase current station marker
+    setMarker(symbol); 
+    setThisStationsNameAndSymbol(symbol);
+    station.randomizeMerchAttr(0);
+    station.randomizeMerchAttr(1);
 }
 
 // -------------------------------------------------------------------------------------------------
 
+string Sector::stationSelector() {
+    Dialog::clear();
+    displayMap();
+    displayStationOptions();
+    Dialog::drawBottomBorder("Select Next Destination");
+    return Misc::charToString(Misc::getChar(allStationSymbols));
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void Sector::gameLoop() {
+    bool gameover = false;
+    do {
+        station.interactWithStation();
+        string symbol = stationSelector();
+        if(symbol == station.stationSymbol) continue;
+        events.travelCounter(getDistance(this->station.stationSymbol, symbol), 
+                             this->station.ship.engine, 
+                             this->station.stationName, 
+                             getStationNameFromSymbol(symbol));
+        setNewStation(symbol);
+    } while (!gameover);
+}
+
+// -------------------------------------------------------------------------------------------------
 
 #endif // GOODS_H

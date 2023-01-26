@@ -19,7 +19,7 @@ public:
 
     void printGoodsData() {
         cout << setw(12) << name << setw(7) << price 
-             << setw(10) << quantity << endl;
+             << setw(10) << quantity << "\n";
     }
 };
 

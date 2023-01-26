@@ -5,14 +5,13 @@
 #include <iomanip>
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include "ship.h"
 #include "goods.h"
 #include "dialog.h"
-#include "asciiArt.cpp"
 #include "miscellaneous.cpp"
 
 using namespace std;
-using namespace Misc;
 
 class SpaceStation { 
 public:
@@ -20,7 +19,7 @@ public:
     SpaceStation() {}
     SpaceStation(string stationName) {
         this->stationName = stationName;
-        this->stationSymbol = charToString(stationName[0]);
+        this->stationSymbol = Misc::charToString(stationName[0]);
         populateWares();
         randomizeMerchAttr(0);
         randomizeMerchAttr(1);
@@ -28,9 +27,11 @@ public:
 
     string stationName = "";
     string stationSymbol = "";
+    int stationId = 0;
     Ship ship;
+    Art art;
 
-    vector<Goods*> wares = {};
+    vector<unique_ptr<Goods>> wares = {};
     vector<string> merchandiseList = {
         "Pencils",    
         "Pens",      
@@ -62,9 +63,9 @@ public:
     void randomizeMerchAttr(int attribute) {
         for(int i = 0; i < wares.size(); i++) {
             if(attribute == 0 )
-                wares[i]->price = generateRandomNumber(100);
+                wares[i]->price = Misc::generateRandomNumber(100);
             else if(attribute == 1)
-                wares[i]->quantity = generateRandomNumber(100);
+                wares[i]->quantity = Misc::generateRandomNumber(100);
         }
     }
 
@@ -72,13 +73,13 @@ public:
 
     void populateWares() {
         for(auto i : merchandiseList) {
-            wares.push_back(new Goods(i, 0, 0));
+            wares.push_back(make_unique<Goods>(i, 0, 0));
         }
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    void printWares(const vector<Goods*> & goods, bool enumerated = true) {
+    void printWares(const vector<unique_ptr<Goods>> & goods, bool enumerated = true) {
         vector<string> title = {"Name", "Price", "Quantity"};
         vector<vector<string>> content = {};
         for(int i = 0; i < goods.size(); i++) {
@@ -108,7 +109,7 @@ public:
     void transactPurchase(int selection, int qty) {
         // If type of goods is already on ship, add to it. Otherwise make a new one.
         if(!ship.cargo.size())
-            ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+            ship.cargo.push_back(make_unique<Goods>(wares[selection - 1]->name,
                                                wares[selection - 1]->price, qty));
         else {
             // Search for item and increment
@@ -121,7 +122,7 @@ public:
                 }        
             }
             if(!itemExists) {
-                ship.cargo.push_back(new Goods(wares[selection - 1]->name,
+                ship.cargo.push_back(make_unique<Goods>(wares[selection - 1]->name,
                                             wares[selection - 1]->price, qty));
             }
         }
@@ -147,11 +148,8 @@ public:
                 break;
             }
         }
-        if(!ship.cargo[selection - 1]->quantity) {
-            delete ship.cargo[selection - 1];
-            ship.cargo[selection - 1] = NULL;
+        if(!ship.cargo[selection - 1]->quantity) 
             ship.cargo.erase(ship.cargo.begin() + (selection -1));
-        }
 
         return sale;
     }
@@ -160,8 +158,9 @@ public:
 
     void printPurchaseMenu(string addedText) {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;
-        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        cout << Dialog::drawLine('=', 60) << "\n";
+        Dialog::centerText(this->stationName);
+        cout << "\n";
         printWares(wares, true);
         Dialog::centerText("<Your Merchandise>");
         ship.calculateAvailableCargoSpace();
@@ -180,7 +179,7 @@ public:
         int selection = 0;
         do {
             printPurchaseMenu("Select An Item To Buy");
-            selection = getInt(wares.size(), 0);
+            selection = Misc::getInt(wares.size(), 0);
             if(selection) {
                 int limit = getPurchasingLimit(selection);
                 if(!limit) {
@@ -190,7 +189,7 @@ public:
                 }
                 printPurchaseMenu("Buy how many " + wares[selection - 1]->name + "? (Max " + 
                                 to_string(limit) + ")");
-                int qty = getInt(limit, 0);
+                int qty = Misc::getInt(limit, 0);
                 if(qty)
                     transactPurchase(selection, qty);
             }
@@ -201,8 +200,8 @@ public:
 
     void printSaleMenu(string addedText) {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;        
-        Dialog::centerText("<" + this->stationName + " Merchandise>\n");
+        Dialog::centerText(this->stationName);
+        cout << "\n";
         printWares(wares, false);
         Dialog::centerText("<Your Merchandise>");
         Dialog::centerText("Cargo Space: " + to_string(ship.availableCargoSpace) + 
@@ -219,10 +218,10 @@ public:
         int selection = 0;
         do {
             printSaleMenu("Select an item to sell.");
-            selection = getInt(ship.cargo.size(), 0);
+            selection = Misc::getInt(ship.cargo.size(), 0);
             if(selection) {
                 printSaleMenu("Sell how many " + ship.cargo[selection - 1]->name + "?");
-                int qty = getInt(ship.cargo[selection - 1]->quantity, 0);
+                int qty = Misc::getInt(ship.cargo[selection - 1]->quantity, 0);
                 if(qty)
                     transactSale(selection, qty);
             }
@@ -250,10 +249,10 @@ public:
         bool onStation = true;
         do {
             Dialog::clear();
-            Dialog::centerAsciiArt(AsciiArt::saturn);
+            art.displayAsciiArt(art.stations[stationId]);
             printStationMenu();
             Dialog::drawBottomBorder();
-            int selection = getInt(5);
+            int selection = Misc::getInt(5);
             switch(selection) {
                 case 1: 
                     purchaseGoods();
@@ -263,7 +262,7 @@ public:
                     break;
                 case 4:
                     Dialog::clear();
-                    Dialog::centerAsciiArt(AsciiArt::asciiShips[ship.shipId]);
+                    art.displayAsciiArt(art.ships[ship.shipId]);
                     ship.displayShipStatus();
                     Dialog::pause();
                     break;   
