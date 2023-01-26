@@ -3,11 +3,10 @@
 
 #include <iostream>
 #include <iomanip>
+#include <assert.h>
 #include "miscellaneous.cpp"
-#include "asciiArt.cpp"
 #include "art.h"
 using namespace std;
-using namespace Misc;
 
 namespace Dialog {
 
@@ -129,7 +128,7 @@ namespace Dialog {
     // ---------------------------------------------------------------------------------------------
 
     int getDialogBoxWidth(vector<string> content, bool enumerated = false) {
-        int width = getLongestStrLen(content);
+        int width = Misc::getLongestStrLen(content);
         if(enumerated)
             width += 4;
         return width;
@@ -208,7 +207,7 @@ namespace Dialog {
         int expand = (content.size() > 9) + 1;
         content.erase(content.end());
         // debugDialogBox(boxWidth, indentColumn, columnWidths);
-        
+
         generateDialogHeader(title, indentColumn, columnWidths, (content.size() > 9), enumerated);
         centerText(drawLine('-', boxWidth), screenWidth);
         for(int i = 0; i < content.size(); i++) {
@@ -253,12 +252,13 @@ namespace Dialog {
     void generateDialogBox(string title, vector<string> content, bool enumerated = false, int screenWidth = 60) {
         int boxWidth = getDialogBoxWidth(content, enumerated);
         int indentColumn = (60 - boxWidth) / 2;
-        int columnWidth = getLongestStrLen(content);
+        int columnWidth = Misc::getLongestStrLen(content);
         int expand = (content.size() > 9) + 1;
 
         centerText(title);
         centerText(drawLine('-', boxWidth), screenWidth);
         for(int i = 0; i < content.size(); i++) {
+            assert(content[i].length() < 60);
             cout << setw(indentColumn) << " ";
             if(enumerated) cout << setw(expand) << right << (i + 1) << left << ".) ";
             cout << setw(columnWidth) << left << content[i] << right << "\n";

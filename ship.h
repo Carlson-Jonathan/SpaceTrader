@@ -4,16 +4,15 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <memory>
 #include "miscellaneous.cpp"
 #include "goods.h"
 #include "dialog.h"
-// #include "asciiArt.cpp"
 #include "weapon.h"
 #include "crewman.h"
 #include "art.h"
 
 using namespace std;
-using namespace Misc;
 
 class Ship {
 public:
@@ -30,11 +29,11 @@ public:
     int money = 1000;
     int engine = 40;
 
-    Weapon weapon;
     Art art;
 
-    vector<Crewman*> crew = {};
-    vector<Goods*> cargo = {};
+    unique_ptr<Weapon> weapon;
+    vector<unique_ptr<Crewman>> crew = {};
+    vector<unique_ptr<Goods>> cargo = {};
 
     // ---------------------------------------------------------------------------------------------
 
@@ -81,7 +80,6 @@ public:
 
     void setupShip() {
         Dialog::clear();
-        cout << Dialog::drawLine('=', 60) << endl;
         art.displayAsciiArt(art.misc[0]);
 
         int selection = shipSelector();
@@ -149,9 +147,8 @@ private:
         string finances = "Credits: $" + to_string(money) + "\n";
         Dialog::centerText(finances, 60);
         Dialog::generateDialogBox(title, content, true);
-        cout << Dialog::drawLine('=', 60) << "\n";
-        Dialog::centerText("Make Your Selection");
-        int selection = getInt(ships.size());
+        Dialog::drawBottomBorder();
+        int selection = Misc::getInt(ships.size());
         return selection;
     }
 };
