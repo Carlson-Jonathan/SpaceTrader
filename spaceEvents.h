@@ -1172,6 +1172,500 @@ private:
 
 // -------------------------------------------------------------------------------------------------
 
+class Shrimp : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "You stop in front of a baby space shrimp about half the size of your ship. "
+            "Reports indicate these creatures to generally be harmless garbadge feeders "
+            "that clean up space debris.";
+
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Attack the shrimp.",
+            "Release some of your cargo for it to feed on.",
+            "Ignore the creature and contine on."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class Satellite : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "As you complete your jump you notice an alien satellite drifting through "
+            "space. There is nothing nearby for it to be observing and it seems rogue.";
+
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Bring the device aboard for examination.",
+            "Shoot the satellite and destroy it.",
+            "Ignore the satellite and carry on."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class Anomoly : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "You encounter an undocumented space anomoly which approaches and engulfs your ship. "
+            "Some of your crew begin to act strangely, while random systems malfuncion.";
+
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Flee the area and attempt to outrun it.",
+            "Activate the computer's AI to obtain data on it.",
+            "Do nothing. Wait and see what happens."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class Hail : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "Your ship suddenly starts receiving a hail in an unknown language. Dispite your crew's "
+            "best efforts, they are unable to interpret the hail or determine its source.";
+
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Ignore the signal and continue forward.",
+            "Search the ship's database for interpretations.",
+            "Reply to the hail using all known languages."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class Freighter : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "You encounter a recently wrecked freigther. Much of their cargo has leaked through a "
+            "in the hull and you see the crew of the freighter desperately scrambling to salvage it.";
+            
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Steal some of the cargo and fly away.",
+            "Hail the freighter and offer assitance.",
+            "Leave them to their own problems."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class Pulsar : public EventState {
+public:
+
+    void event() {
+        string content = 
+            "Your ship has re-materialized dangerously close to a pulsar. You are being bombarded "
+            "dangerous highly ionized particles with every wave. There is a rogue asteroid near by "
+            "which may offer you some shelter.";
+            
+        art->displayAsciiArt(image);
+        Dialog::generateDialogBox(title, content);
+    }
+
+    int responseOptions() {
+        vector<string> options = {
+            "Shields up. Resist until you can escape.",
+            "Manuever behind the asteroid for protection.",
+            "Fire at the asteroid. See what happens."
+        };
+
+        Dialog::generateDialogBox("", options, true);
+        return Misc::getInt(options.size());
+    }
+
+    void selection1_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection2_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+
+    void selection3_outcomes() {
+        int outcome = Misc::generateRandomNumber(3);
+        switch(outcome) {
+            case 1:
+                cout << "Bad Stuff" << endl;
+                break;
+            case 2:
+                cout << "Neutral Stuff" << endl;
+                break;
+            case 3:
+                cout << "Good Stuff" << endl;
+                break;
+            default:
+                break;
+        }
+    }       
+
+private: 
+    Art* art = Art::getInstance();
+    vector<string> image = art->aliens["buyer.ascii"];
+    string title = "Red Alert";
+};
+
+// -------------------------------------------------------------------------------------------------
+
 class EventContext {
 public:
     EventContext() {}

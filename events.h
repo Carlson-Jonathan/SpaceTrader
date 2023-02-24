@@ -86,6 +86,12 @@ public:
         allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Amoebas>()));
         allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Nebula>()));
         allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Storm>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Shrimp>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Satellite>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Anomoly>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Hail>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Freighter>()));
+        allSpaceEvents.push_back(make_unique<EventContext>(make_unique<Pulsar>()));
     }
 
 };
