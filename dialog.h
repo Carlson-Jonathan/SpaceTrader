@@ -284,7 +284,7 @@ namespace Dialog {
 
         Art art;
         clear();
-        art.displayAsciiArt(art.aliens[0]);
+        art.displayAsciiArt(art.aliens["pheonix.ascii"]);
         generateDialogBox(title, content);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);

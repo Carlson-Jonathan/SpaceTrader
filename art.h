@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
 #include "miscellaneous.cpp"
 using namespace std;
 
@@ -19,12 +20,12 @@ public:
        populateListFromFile("asciiArt/misc/", misc);
     }
 
-    vector<vector<string>> ships    = {};
-    vector<vector<string>> crewmen  = {};
-    vector<vector<string>> aliens   = {};
-    vector<vector<string>> stations = {};
-    vector<vector<string>> planets  = {}; 
-    vector<vector<string>> misc     = {};
+    map<string, vector<string>> ships    = {};
+    map<string, vector<string>> crewmen  = {};
+    map<string, vector<string>> aliens   = {};
+    map<string, vector<string>> stations = {};
+    map<string, vector<string>> planets  = {}; 
+    map<string, vector<string>> misc     = {};
 
     // ---------------------------------------------------------------------------------------------
 
@@ -47,7 +48,7 @@ private:
 
     vector<string> getAsciiArt(const string & fileName) {
         ifstream file(fileName);
-        if (file.fail()) 
+        if(file.fail()) 
             cout << "Error reading file: " << fileName << "\n";
         vector<string> image = {};
         string line = "";
@@ -60,14 +61,14 @@ private:
 
     // ---------------------------------------------------------------------------------------------
 
-    void populateListFromFile(const char* directory, vector<vector<string>> & list) {
+    void populateListFromFile(const char* directory, map<string, vector<string>> & list) {
         vector<string> files = Misc::getAllFileNamesFromDirectory(directory);
         for(auto i : files) {
             vector<string> art = getAsciiArt(directory + i);
-            list.push_back(art);
-            list[list.size() - 1].push_back("\n");
+            art.push_back("\n");
+            list.insert({i, art});
         }
-    }
+    }            
 };
 
 #endif // ART_H

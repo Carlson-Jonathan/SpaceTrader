@@ -17,7 +17,7 @@ class SpaceStation {
 public:
 
     SpaceStation() {}
-    SpaceStation(string stationName) {
+    SpaceStation(string stationName) {        
         this->stationName = stationName;
         this->stationSymbol = Misc::charToString(stationName[0]);
         populateWares();
@@ -27,6 +27,7 @@ public:
 
     string stationName = "";
     string stationSymbol = "";
+    string stationFile = "";
     int stationId = 0;
     Ship ship;
     Art art;
@@ -245,11 +246,22 @@ public:
 
     // ---------------------------------------------------------------------------------------------
 
+    string setStationImageFile() {
+        string fileName = "";
+        for(int i = 0; stationName[i] != ' '; i++) {
+            fileName += Misc::charToString(stationName[i]);
+        }
+        return fileName + ".ascii";
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     void interactWithStation() {
         bool onStation = true;
         do {
             Dialog::clear();
-            art.displayAsciiArt(art.stations[stationId]);
+            stationFile = setStationImageFile();
+            art.displayAsciiArt(art.stations[stationFile]);
             printStationMenu();
             Dialog::drawBottomBorder();
             int selection = Misc::getInt(5);
@@ -262,7 +274,7 @@ public:
                     break;
                 case 4:
                     Dialog::clear();
-                    art.displayAsciiArt(art.ships[ship.shipId]);
+                    art.displayAsciiArt(art.ships[ship.shipFile]);
                     ship.displayShipStatus();
                     Dialog::pause();
                     break;   

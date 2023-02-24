@@ -34,6 +34,7 @@ public:
     unique_ptr<Weapon> weapon;
     vector<unique_ptr<Crewman>> crew = {};
     vector<unique_ptr<Goods>> cargo = {};
+    string shipFile;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -80,7 +81,7 @@ public:
 
     void setupShip() {
         Dialog::clear();
-        art.displayAsciiArt(art.misc[0]);
+        art.displayAsciiArt(art.misc["shipyard.ascii"]);
 
         int selection = shipSelector();
         this->name = shipNames[selection - 1];
@@ -94,7 +95,11 @@ public:
         Dialog::clear();
         
         this->shipId = selection - 1;
-        art.displayAsciiArt(art.ships[this->shipId]);
+
+        string shipName = shipNames[shipId];
+        shipFile = Misc::charToString(tolower(shipName[0])) + 
+            shipName.substr(1, shipName.length() - 1) + ".ascii";
+        art.displayAsciiArt(art.ships[shipFile]);
         Dialog::centerText("Ship Purchased:\n");
         displayShipStatus();
         Dialog::pause();
