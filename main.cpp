@@ -10,6 +10,5 @@ int main() {
     Dialog::newGameIntro();
     Sector sector;
 
-
     return 0;
 }

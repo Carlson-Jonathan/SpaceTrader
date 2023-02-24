@@ -10,14 +10,12 @@ using namespace std;
 
 class Art {
 public:
+    Art(const Art& obj) = delete; // This is now a singleton
 
-    Art() {
-       populateListFromFile("asciiArt/characters/aliens/", aliens);
-       populateListFromFile("asciiArt/characters/crew/", crewmen);
-       populateListFromFile("asciiArt/planets/", planets);
-       populateListFromFile("asciiArt/ships/", ships);
-       populateListFromFile("asciiArt/stations/", stations);
-       populateListFromFile("asciiArt/misc/", misc);
+    static Art* getInstance() {
+        if(!instancePtr) 
+            instancePtr = new Art();
+        return instancePtr;
     }
 
     map<string, vector<string>> ships    = {};
@@ -45,6 +43,17 @@ public:
 // =================================================================================================
 
 private:
+    Art() {
+       populateListFromFile("asciiArt/characters/aliens/", aliens);
+       populateListFromFile("asciiArt/characters/crew/", crewmen);
+       populateListFromFile("asciiArt/planets/", planets);
+       populateListFromFile("asciiArt/ships/", ships);
+       populateListFromFile("asciiArt/stations/", stations);
+       populateListFromFile("asciiArt/misc/", misc);
+    }
+
+    static Art* instancePtr;
+
 
     vector<string> getAsciiArt(const string & fileName) {
         ifstream file(fileName);
@@ -70,5 +79,7 @@ private:
         }
     }            
 };
+
+Art* Art::instancePtr = NULL;
 
 #endif // ART_H

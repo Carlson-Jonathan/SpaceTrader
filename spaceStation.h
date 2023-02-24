@@ -30,7 +30,7 @@ public:
     string stationFile = "";
     int stationId = 0;
     Ship ship;
-    Art art;
+    Art* art = Art::getInstance();
 
     vector<unique_ptr<Goods>> wares = {};
     vector<string> merchandiseList = {
@@ -261,7 +261,7 @@ public:
         do {
             Dialog::clear();
             stationFile = setStationImageFile();
-            art.displayAsciiArt(art.stations[stationFile]);
+            art->displayAsciiArt(art->stations[stationFile]);
             printStationMenu();
             Dialog::drawBottomBorder();
             int selection = Misc::getInt(5);
@@ -274,7 +274,7 @@ public:
                     break;
                 case 4:
                     Dialog::clear();
-                    art.displayAsciiArt(art.ships[ship.shipFile]);
+                    art->displayAsciiArt(art->ships[ship.shipFile]);
                     ship.displayShipStatus();
                     Dialog::pause();
                     break;   

@@ -29,7 +29,7 @@ public:
     int money = 1000;
     int engine = 40;
 
-    Art art;
+    Art* art = Art::getInstance();
 
     unique_ptr<Weapon> weapon;
     vector<unique_ptr<Crewman>> crew = {};
@@ -81,7 +81,7 @@ public:
 
     void setupShip() {
         Dialog::clear();
-        art.displayAsciiArt(art.misc["shipyard.ascii"]);
+        art->displayAsciiArt(art->misc["shipyard.ascii"]);
 
         int selection = shipSelector();
         this->name = shipNames[selection - 1];
@@ -99,7 +99,7 @@ public:
         string shipName = shipNames[shipId];
         shipFile = Misc::charToString(tolower(shipName[0])) + 
             shipName.substr(1, shipName.length() - 1) + ".ascii";
-        art.displayAsciiArt(art.ships[shipFile]);
+        art->displayAsciiArt(art->ships[shipFile]);
         Dialog::centerText("Ship Purchased:\n");
         displayShipStatus();
         Dialog::pause();

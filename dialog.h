@@ -282,9 +282,9 @@ namespace Dialog {
         string title = "Welcome to Calypso Station!";
         string content = introText;
 
-        Art art;
+        Art* art = Art::getInstance();
         clear();
-        art.displayAsciiArt(art.aliens["pheonix.ascii"]);
+        art->displayAsciiArt(art->aliens["pheonix.ascii"]);
         generateDialogBox(title, content);
 
         centerText("Before we can proceed, you must purchase a ship...\n", 60);
