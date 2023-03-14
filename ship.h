@@ -24,10 +24,27 @@ public:
     int shipId = 0;
     int hull = 0;
     int cargoCapacity = 0;
+    int fuelTank = 0;
     int availableCargoSpace = 0;
     int crewSize = 0;
     int money = 1000;
     int engine = 40;
+    string engineDescription = 
+        "The Flux Translocation Engine, or FTL for short, is a "
+        "cutting-edge propulsion system that utilizes a revolutionary "
+        "new technology to transport spacecraft across vast distances "
+        "of space. Using the power of Flux Translocation, this engine "
+        "is capable of jumping across many light years of space in an "
+        "instant, making it a valuable asset for any long-distance "
+        "space travel. While the engine has a limited range, it can "
+        "be upgraded to increase its capabilities and travel even "
+        "further. The FTL drive is fueled by a rare and exotic form "
+        "of matter known as Lumonite, which is capable of harnessing "
+        "and manipulating the fundamental forces of the universe to "
+        "propel the ship forward. With its sleek design and advanced "
+        "technology, the Flux Translocation Engine is a marvel of "
+        "modern space travel, and a crucial tool for any interstellar "
+        "adventurer seeking to explore the depths of the cosmos.";
 
     Art* art = Art::getInstance();
 
@@ -43,6 +60,26 @@ public:
         for(int i = 0; i < cargo.size(); i++) {
             availableCargoSpace -= cargo[i]->quantity;
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    void viewEngine() {
+        Dialog::generateDialogBox("FTL", engineDescription);
+        vector<string> title = {
+            "Level", "Range", "Fuel/Jump", "Cost"
+        };
+
+        vector<vector<string>> upgrades = {
+            {"1", "40", "2", "N/A"},
+            {"2", "55", "3", "10,000"},
+            {"3", "70", "5", "25,000"},
+            {"4", "75", "2", "100,000"},
+            {"5", "100", "1", "200,000"}
+        };
+
+        Dialog::generateDialogBox(title, upgrades);
+        Dialog::pause();
     }
 
     // ---------------------------------------------------------------------------------------------

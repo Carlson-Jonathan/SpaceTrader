@@ -225,6 +225,13 @@ string Sector::stationSelector() {
 
 void Sector::gameLoop() {
     bool gameover = false;
+
+    // Art* art = Art::getInstance();
+    // for(auto i : art->spaceEvents) {
+    //     art->displayAsciiArt(i.second);
+    //     Dialog::pause();
+    // }
+
     do {
         station.interactWithStation();
         string symbol = stationSelector();

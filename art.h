@@ -18,12 +18,13 @@ public:
         return instancePtr;
     }
 
-    map<string, vector<string>> ships    = {};
-    map<string, vector<string>> crewmen  = {};
-    map<string, vector<string>> aliens   = {};
-    map<string, vector<string>> stations = {};
-    map<string, vector<string>> planets  = {}; 
-    map<string, vector<string>> misc     = {};
+    map<string, vector<string>> ships       = {};
+    map<string, vector<string>> crewmen     = {};
+    map<string, vector<string>> aliens      = {};
+    map<string, vector<string>> stations    = {};
+    map<string, vector<string>> planets     = {}; 
+    map<string, vector<string>> misc        = {};
+    map<string, vector<string>> spaceEvents = {};    
 
     // ---------------------------------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ private:
        populateListFromFile("asciiArt/ships/", ships);
        populateListFromFile("asciiArt/stations/", stations);
        populateListFromFile("asciiArt/misc/", misc);
+       populateListFromFile("asciiArt/spaceEvents/", spaceEvents);
     }
 
     static Art* instancePtr;

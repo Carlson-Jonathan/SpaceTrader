@@ -64,6 +64,7 @@ public:
 
     void selection2_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -130,6 +131,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -211,6 +213,7 @@ public:
     }
 
     void selection1_outcomes() {
+        art->displayAsciiArt(image);        
         int outcome = Misc::generateRandomNumber(3);
         switch(outcome) {
             case 1:
@@ -294,6 +297,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -375,6 +379,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -426,7 +431,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["biohazard.ascii"];
     string title = "Red Alert";
 };
 
@@ -457,6 +462,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -508,7 +514,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["solarFlare.ascii"];
     string title = "Red Alert";
 };
 
@@ -539,6 +545,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -590,7 +597,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["blackHole.ascii"];
     string title = "Red Alert";
 };
 
@@ -621,6 +628,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -672,7 +680,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->aliens["aliens.ascii"];
     string title = "Red Alert";
 };
 
@@ -703,6 +711,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -754,7 +763,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["engine.ascii"];
     string title = "Red Alert";
 };
 
@@ -765,7 +774,7 @@ public:
 
     void event() {
         string content = 
-            "Random Event Scenario: A rogue asteroid field suddenly appears in the path of your ship, "
+            "A rogue asteroid field suddenly appears in the path of your ship, "
             "threatening to damage or destroy your ship and cargo.";
 
         art->displayAsciiArt(image);
@@ -785,6 +794,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -836,7 +846,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["asteroids.ascii"];
     string title = "Red Alert";
 };
 
@@ -868,6 +878,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -919,7 +930,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["distressCall.ascii"];
     string title = "Red Alert";
 };
 
@@ -950,6 +961,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1001,7 +1013,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["amoeba.ascii"];
     string title = "Red Alert";
 };
 
@@ -1032,6 +1044,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1115,6 +1128,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1166,7 +1180,7 @@ public:
 
 private: 
     Art* art = Art::getInstance();
-    vector<string> image = art->aliens["buyer.ascii"];
+    vector<string> image = art->spaceEvents["storm.ascii"];
     string title = "Red Alert";
 };
 
@@ -1198,6 +1212,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1280,6 +1295,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1362,6 +1378,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1444,6 +1461,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1526,6 +1544,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1609,6 +1628,7 @@ public:
 
     void selection1_outcomes() {
         int outcome = Misc::generateRandomNumber(3);
+        art->displayAsciiArt(image);        
         switch(outcome) {
             case 1:
                 cout << "Bad Stuff" << endl;
@@ -1699,10 +1719,10 @@ public:
         Dialog::clear();
         event();
         responseOptions();
-        Dialog::drawBottomBorder();
+        Dialog::clear();
         outcome();
+        Dialog::drawBottomBorder("");
         Dialog::pause();
-        Dialog::drawBottomBorder();
     }
 
 private:
